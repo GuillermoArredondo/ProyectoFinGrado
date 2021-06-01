@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:forumdroid/pages/registro.dart';
 import 'package:forumdroid/theme/app_theme.dart';
 
 class Login extends StatefulWidget {
@@ -13,7 +14,12 @@ class _LoginState extends State<Login> {
     return Scaffold(
       //backgroundColor: app_theme.primaryColor,
       resizeToAvoidBottomInset: false,
-      body: SingleChildScrollView(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.white, app_theme.primaryColor],
+            begin: Alignment.bottomCenter)
+        ),
         padding: EdgeInsets.only(top: 100),
         child: Center(
           child: Form(
@@ -54,14 +60,21 @@ class _LoginState extends State<Login> {
             icon: Icon(Icons.mail_outline, color: Colors.black),
             labelText: 'Email',
             labelStyle: TextStyle(
-              color: app_theme.primaryColor,
+              color: Colors.black,
             ),
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20.0),
+              borderSide: BorderSide(
+                color: Colors.black,
+                width: 2.0,
+              ),
+            ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.0),
               borderSide: BorderSide(
-                color: app_theme.primaryColor,
+                color: Colors.black,
                 width: 2.0,
               ),
             ),
@@ -80,14 +93,21 @@ class _LoginState extends State<Login> {
             icon: Icon(Icons.lock_open, color: Colors.black),
             labelText: 'Contraseña',
             labelStyle: TextStyle(
-              color: app_theme.primaryColor,
+              color: Colors.black,
             ),
             border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
+                OutlineInputBorder(borderRadius: BorderRadius.circular(15.0),),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20.0),
+              borderSide: BorderSide(
+                color: Colors.black,
+                width: 2.0,
+              ),
+            ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.0),
               borderSide: BorderSide(
-                color: app_theme.primaryColor,
+                color: Colors.black,
                 width: 2.0,
               ),
             ),
@@ -158,10 +178,14 @@ class _LoginState extends State<Login> {
     return Container(
       child: new Row(
         children: <Widget>[
-          Padding(padding: EdgeInsets.only(left: 20)),
-          Text("Aún no tienes cuenta?", style: TextStyle(fontSize: 20),),
+          Padding(padding: EdgeInsets.only(left: 30)),
+          Text("¿No tienes cuenta?", style: TextStyle(fontSize: 20),),
           Padding(padding: EdgeInsets.all(20)),
-          Text("Registrarse", style: TextStyle(fontSize: 20, color: app_theme.primaryColor))
+          InkWell(
+            child: Text("Registrarse", style: TextStyle(fontSize: 20, color: app_theme.primaryColor)),
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => Registro())),
+          ),
+          //Text("Registrarse", style: TextStyle(fontSize: 20, color: app_theme.primaryColor))
         ],
       ),
     );

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:forumdroid/pages/login.dart';
+import 'package:forumdroid/pages/registro.dart';
 
 void main() {
   //Inicializa todas las dependencias de Firebase antes de Correr Flutter
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
       initialRoute: 'login',
       routes:{
         'login': (BuildContext context) => Login(),
+        'registro' : (BuildContext context) => Registro()
       } 
     );
   }
