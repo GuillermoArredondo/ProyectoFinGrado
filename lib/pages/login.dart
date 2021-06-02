@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:forumdroid/models/user_model.dart';
 import 'package:forumdroid/pages/registro.dart';
 import 'package:forumdroid/theme/app_theme.dart';
+import 'package:forumdroid/utils/auth.dart';
+import 'package:forumdroid/utils/validations.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -9,6 +12,10 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+
+  final _formKey = GlobalKey<FormState>();
+  UserModel user = new UserModel();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,13 +23,13 @@ class _LoginState extends State<Login> {
       resizeToAvoidBottomInset: false,
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.white, app_theme.primaryColor],
-            begin: Alignment.bottomCenter)
-        ),
+            gradient: LinearGradient(
+                colors: [Colors.white, app_theme.primaryColor],
+                begin: Alignment.bottomCenter)),
         padding: EdgeInsets.only(top: 100),
         child: Center(
           child: Form(
+              key: _formKey,
               child: Column(
                   //mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
@@ -39,7 +46,7 @@ class _LoginState extends State<Login> {
                 _emailInputBox(),
                 Padding(padding: EdgeInsets.all(10)),
                 _passInputBox(),
-                Padding(padding: EdgeInsets.all(35)),
+                Padding(padding: EdgeInsets.all(20)),
                 _loginButton(),
                 Padding(padding: EdgeInsets.all(20)),
                 _mediaButtons(),
@@ -79,8 +86,11 @@ class _LoginState extends State<Login> {
               ),
             ),
           ),
-          onSaved: (value) {},
-          validator: (value) {}),
+          onSaved: (value) {
+            user.email = value!;
+          },
+          validator: (value) => valEmail(value!)
+      ),
     );
   }
 
@@ -95,8 +105,9 @@ class _LoginState extends State<Login> {
             labelStyle: TextStyle(
               color: Colors.black,
             ),
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(15.0),),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15.0),
+            ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.0),
               borderSide: BorderSide(
@@ -112,8 +123,11 @@ class _LoginState extends State<Login> {
               ),
             ),
           ),
-          onSaved: (value) {},
-          validator: (value) {}),
+          onSaved: (value) {
+            user.password = value!;
+          },
+          validator: (value) => valPass(value!)
+          ),
     );
   }
 
@@ -130,7 +144,15 @@ class _LoginState extends State<Login> {
           'Iniciar Sesión',
           style: new TextStyle(fontSize: 19),
         ),
-        onPressed: () {},
+        onPressed: () {
+
+          //validacion del key del formulario
+          if (!_formKey.currentState!.validate()) {
+            return;
+          }
+          _formKey.currentState!.save();
+          loginUserPass(context, user);
+        },
       ),
     );
   }
@@ -174,16 +196,21 @@ class _LoginState extends State<Login> {
     );
   }
 
-  _newAccText(){
+  _newAccText() {
     return Container(
       child: new Row(
         children: <Widget>[
           Padding(padding: EdgeInsets.only(left: 30)),
-          Text("¿No tienes cuenta?", style: TextStyle(fontSize: 20),),
+          Text(
+            "¿No tienes cuenta?",
+            style: TextStyle(fontSize: 20),
+          ),
           Padding(padding: EdgeInsets.all(20)),
           InkWell(
-            child: Text("Registrarse", style: TextStyle(fontSize: 20, color: app_theme.primaryColor)),
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => Registro())),
+            child: Text("Registrarse",
+                style: TextStyle(fontSize: 20, color: app_theme.primaryColor)),
+            onTap: () => Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Registro())),
           ),
           //Text("Registrarse", style: TextStyle(fontSize: 20, color: app_theme.primaryColor))
         ],

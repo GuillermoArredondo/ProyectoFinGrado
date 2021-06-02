@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:forumdroid/pages/home.dart';
 import 'package:forumdroid/pages/login.dart';
 import 'package:forumdroid/pages/registro.dart';
 
@@ -23,7 +24,8 @@ class MyApp extends StatelessWidget {
       initialRoute: 'login',
       routes:{
         'login': (BuildContext context) => Login(),
-        'registro' : (BuildContext context) => Registro()
+        'registro' : (BuildContext context) => Registro(),
+        'home': (BuildContext context) => Home()
       } 
     );
   }

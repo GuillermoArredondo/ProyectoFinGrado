@@ -31,6 +31,9 @@ dependencies:
   firebase_core:
   cloud_firestore:
   font_awesome_flutter:
+  firebase_auth:
+  provider:
+  google_sign_in:
 
 dev_dependencies:
   flutter_test:

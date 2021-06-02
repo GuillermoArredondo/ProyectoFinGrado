@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:forumdroid/models/user_model.dart';
 import 'package:forumdroid/theme/app_theme.dart';
+import 'package:forumdroid/utils/auth.dart';
+import 'package:forumdroid/utils/validations.dart';
 
 class Registro extends StatefulWidget {
   @override
@@ -8,6 +11,10 @@ class Registro extends StatefulWidget {
 }
 
 class _RegistroState extends State<Registro> {
+
+  final _formKey = GlobalKey<FormState>();
+  final user = UserModel();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,6 +27,7 @@ class _RegistroState extends State<Registro> {
         padding: EdgeInsets.only(top: 150),
         child: Center(
           child: Form(
+              key: _formKey,
               child: Column(
                   //mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
@@ -95,6 +103,10 @@ class _RegistroState extends State<Registro> {
               ),
             ),
           ),
+          onSaved: (value) {
+            user.email = value!;
+          },
+          validator: (value) => valEmail(value!)
         ));
   }
 
@@ -108,7 +120,7 @@ class _RegistroState extends State<Registro> {
             icon: Icon(
               Icons.lock_open,
               color: Colors.black,
-              size: 30,
+              size: 25,
             ),
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
@@ -127,6 +139,10 @@ class _RegistroState extends State<Registro> {
               ),
             ),
           ),
+          onSaved: (value) {
+            user.password = value!;
+          },
+          validator: (value) => valPass(value!)
         ));
   }
 
@@ -143,7 +159,15 @@ class _RegistroState extends State<Registro> {
           'Registrarse',
           style: new TextStyle(fontSize: 19),
         ),
-        onPressed: () {},
+        onPressed: () {
+          
+          //validacion del key del formulario
+          if (!_formKey.currentState!.validate()) {
+            return;
+          }
+          _formKey.currentState!.save();
+          registerUser(context, user);
+        },
       ),
     );
   }
