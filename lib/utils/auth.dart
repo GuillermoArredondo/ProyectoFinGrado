@@ -1,13 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_twitter_login/flutter_twitter_login.dart';
 import 'package:forumdroid/models/user_model.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import 'general.dart';
 
 // ignore: non_constant_identifier_names
 final _firebase = FirebaseAuth.instance;
 
+final TWITTER_API = 'dlMLoZugvLVrDAmX2ue5iKMFg';
+final TWITTER_SECRET = 'fJ5jZWochpcymE81OujJrkIF68GiF7jHzv20XncKZNSKxfUxsm';
+
+
+//Login con Usuario / Password
 loginUserPass(context, UserModel user) async {
   try {
     await _firebase
@@ -35,6 +42,7 @@ loginUserPass(context, UserModel user) async {
   }
 }
 
+//Registro de Usuario en Firebase
 registerUser(context, UserModel user) async {
   try {
     await _firebase
@@ -52,5 +60,50 @@ registerUser(context, UserModel user) async {
     }
   } catch (error) {
     alert(context, 'Error', error.toString());
+  }
+}
+
+//Login con Google
+loginGoogle(context) async {
+  try {
+    final googleUser = await GoogleSignIn().signIn();
+    final googleAuth = await googleUser!.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+    await _firebase.signInWithCredential(credential).then((value) {
+      Navigator.of(context).pushReplacementNamed('home');
+    });
+  } catch (error) {
+    alert(context, 'Error', error.toString());
+  }
+}
+
+
+//Login con Twitter
+loginTwitter(context) async{
+
+  final TwitterLogin _loginTW =  TwitterLogin(
+    consumerKey: TWITTER_API, 
+    consumerSecret: TWITTER_SECRET
+  );
+
+  try {
+    final TwitterLoginResult tlr = await _loginTW.authorize();
+    if (tlr.status == TwitterLoginStatus.loggedIn) {
+      return null;
+    }
+    var session = tlr.session;
+    final AuthCredential twitterAuth = TwitterAuthProvider.credential(
+      accessToken: session.token,
+      secret: session.secret
+    );
+    await _firebase.signInWithCredential(twitterAuth).then((value) {
+      Navigator.of(context).pushReplacementNamed('home');
+    });
+    
+  } catch (error) {
+    //alert(context, 'Error', error.toString());
   }
 }

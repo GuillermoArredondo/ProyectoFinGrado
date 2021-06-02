@@ -164,7 +164,9 @@ class _LoginState extends State<Login> {
           Padding(
             padding: EdgeInsets.only(left: 120),
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                loginGoogle(context);
+              },
               child: FaIcon(
                 FontAwesomeIcons.google,
                 size: 35,
@@ -179,7 +181,9 @@ class _LoginState extends State<Login> {
           Padding(
             padding: EdgeInsets.only(left: 20),
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                loginTwitter(context);
+              },
               child: FaIcon(
                 FontAwesomeIcons.twitter,
                 size: 35,
