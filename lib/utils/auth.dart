@@ -10,6 +10,7 @@ import 'general.dart';
 // ignore: non_constant_identifier_names
 final _firebase = FirebaseAuth.instance;
 
+//variables API de twitter
 final TWITTER_API = 'dlMLoZugvLVrDAmX2ue5iKMFg';
 final TWITTER_SECRET = 'fJ5jZWochpcymE81OujJrkIF68GiF7jHzv20XncKZNSKxfUxsm';
 
@@ -90,20 +91,30 @@ loginTwitter(context) async{
   );
 
   try {
-    final TwitterLoginResult tlr = await _loginTW.authorize();
-    if (tlr.status == TwitterLoginStatus.loggedIn) {
-      return null;
+    final TwitterLoginResult result = await _loginTW.authorize();
+
+    switch(result.status){
+
+      case TwitterLoginStatus.loggedIn:
+        //alert(context, '', 'Conectado con ' + result.session.username);
+        var session = result.session;
+        final AuthCredential twitterAuth = TwitterAuthProvider.credential(
+          accessToken: session.token,
+          secret: session.secret
+        ); 
+        await _firebase.signInWithCredential(twitterAuth).then((value) {
+          Navigator.of(context).pushReplacementNamed('home');
+        });
+        break;
+      case TwitterLoginStatus.cancelledByUser:
+        alert(context, 'Error', 'Cancelado');
+        break;
+      case TwitterLoginStatus.error:
+        alert(context, 'Error', result.errorMessage);
+        break;
     }
-    var session = tlr.session;
-    final AuthCredential twitterAuth = TwitterAuthProvider.credential(
-      accessToken: session.token,
-      secret: session.secret
-    );
-    await _firebase.signInWithCredential(twitterAuth).then((value) {
-      Navigator.of(context).pushReplacementNamed('home');
-    });
     
   } catch (error) {
-    //alert(context, 'Error', error.toString());
+    alert(context, 'Error', error.toString());
   }
 }
