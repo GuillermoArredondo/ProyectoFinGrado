@@ -35,3 +35,11 @@ valPass(String pass) {
     return "El campo contraseña no puede estar vacio";
   }
 }
+
+valName(String name) {
+  if (name.isNotEmpty) {
+    return null;
+  } else {
+    return "El campo nombre no puede estar vacio";
+  }
+}

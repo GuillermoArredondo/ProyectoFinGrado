@@ -1,6 +1,9 @@
 
 import 'package:flutter/material.dart';
+import 'package:forumdroid/models/user_model.dart';
 import 'package:forumdroid/theme/app_theme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
 
 //Muestra una alerta con su mensaje
@@ -31,4 +34,58 @@ void alert(BuildContext context, String titulo, String msg,
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         );
       });
+}
+
+//Generación de ID
+String genId() => Uuid().v1();
+
+
+//Guarda en las shared prefs el user logged
+saveUserSharedPrefs(UserModel user) async{
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  var id = user.id;
+  var name = user.name;
+  var email = user.email;
+  var pass = user.password;
+  await prefs.setString('id', id!);
+  await prefs.setString('name', name!);
+  await prefs.setString('email', email!);
+  await prefs.setString('pass', pass!);
+}
+
+//Obtiene el user 
+getUserFromPrefs() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    UserModel user = new UserModel();
+    user.id = prefs.getString('id');
+    user.email = prefs.getString('email');
+    user.email = prefs.getString('name');
+    user.email = prefs.getString('password');
+    return user;
+}
+
+//Obtiene los valores del user de prefs
+// Future<UserModel> getPrefs()async{
+//   UserModel user = new UserModel();
+//   SharedPreferences prefs = await SharedPreferences.getInstance();
+//   user.id = prefs.getString('id');
+//   user.email = prefs.getString('email');
+//   user.name = prefs.getString('name');
+//   user.password = prefs.getString('password');
+//   return user;
+// }
+
+Future<String> getNamePrefs()async{
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString('name') as String;
+}
+
+Future<String> getIconPrefs()async{
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString('name')!.substring(0,1);
+}
+
+Future<String> getEmailPrefs()async{
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString('email') as String;
 }

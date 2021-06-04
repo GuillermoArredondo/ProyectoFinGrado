@@ -1,3 +1,4 @@
+
 class UserModel {
   String? id;
   String? name;
@@ -12,4 +13,5 @@ class UserModel {
     this.password,
     //this.imgUrl,
   });
+
 }

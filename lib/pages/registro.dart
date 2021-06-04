@@ -75,6 +75,10 @@ class _RegistroState extends State<Registro> {
               ),
             ),
           ),
+          onSaved: (value) {
+            user.name = value!;
+          },
+          validator: (value) => valName(value!)
         ));
   }
 

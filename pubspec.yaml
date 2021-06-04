@@ -35,6 +35,8 @@ dependencies:
   provider:
   google_sign_in:
   flutter_twitter_login:
+  uuid:
+  shared_preferences:
 
 dev_dependencies:
   flutter_test:

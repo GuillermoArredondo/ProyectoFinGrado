@@ -1,14 +1,19 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_login/flutter_twitter_login.dart';
 import 'package:forumdroid/models/user_model.dart';
+import 'package:forumdroid/pages/home.dart';
+import 'package:forumdroid/utils/firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'general.dart';
 
 // ignore: non_constant_identifier_names
 final _firebase = FirebaseAuth.instance;
+final _firestore = FirebaseFirestore.instance;
 
 //variables API de twitter
 final TWITTER_API = 'dlMLoZugvLVrDAmX2ue5iKMFg';
@@ -22,7 +27,9 @@ loginUserPass(context, UserModel user) async {
         .signInWithEmailAndPassword(
             email: user.email!, password: user.password!)
         .then((value) {
-      Navigator.of(context).pushReplacementNamed('home');
+          //getUserByEmail(_firestore, user.email!);
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => Home()));
     });
   } on FirebaseAuthException catch (error) {
 
@@ -50,8 +57,9 @@ registerUser(context, UserModel user) async {
         .createUserWithEmailAndPassword(
             email: user.email!, password: user.password!)
         .then((value) {
-      alert(context, 'Éxito', 'Usuario registrado correctamente', () => Navigator.pop(context));
-      Navigator.of(context).pushReplacementNamed('login');
+      alert(context, 'Éxito', 'Usuario registrado correctamente',
+       () => Navigator.pop(context));
+      addNewUser(_firestore, user);
     });
   } on FirebaseAuthException catch (error) {
     if (error.code == 'email-already-in-use') {
@@ -84,7 +92,6 @@ loginGoogle(context) async {
 
 //Login con Twitter
 loginTwitter(context) async{
-
   final TwitterLogin _loginTW =  TwitterLogin(
     consumerKey: TWITTER_API, 
     consumerSecret: TWITTER_SECRET
@@ -118,3 +125,5 @@ loginTwitter(context) async{
     alert(context, 'Error', error.toString());
   }
 }
+
+
