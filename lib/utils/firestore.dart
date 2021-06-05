@@ -18,21 +18,34 @@ void addNewUser(FirebaseFirestore firestore, UserModel user) {
   });
 }
 
-//get Usuario por email de Firestore
-getUserByEmail(FirebaseFirestore firestore, String email) async {
+//Get Usuario por email de Firestore
+//Este método tambien es llamado cuando se intenta logear con una red social,
+//Y el usuario no esta regiustrado en firestore, de esta manera se registrará
+getUserByEmail(context, FirebaseFirestore firestore, UserModel user) async {
   CollectionReference collectionReference = firestore.collection('users');
   QuerySnapshot<Object?> users =
-      await collectionReference.where('email', isEqualTo: email).get();
-  List<UserModel> list = [];
-  for (var doc in users.docs) {
-    UserModel user = new UserModel();
-    user.id = doc['id'];
-    user.email = doc['email'];
-    user.name = doc['name'];
-    user.password = doc['password'];
-    list.add(user);
+      await collectionReference.where('email', isEqualTo: user.email).get();
+
+  if (users.docs.isEmpty) {
+    print('getUserByEmail dentro del if');
+    user.id = genId();
+    user.password = '';
+    addNewUser(firestore, user);
+    saveUserSharedPrefs(user);
+
+  }else{
+    List<UserModel> list = [];
+    for (var doc in users.docs) {
+      UserModel user = new UserModel();
+      user.id = doc['id'];
+      user.email = doc['email'];
+      user.name = doc['name'];
+      user.password = doc['password'];
+      list.add(user);
+    }
+    print('getUserByEmail');
+    saveUserSharedPrefs(list[0]);
   }
-  //return list[0];
-  saveUserSharedPrefs(list[0]);
+  
 }
 

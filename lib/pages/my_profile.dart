@@ -53,7 +53,7 @@ class _MyProfileState extends State<MyProfile> {
                   () => Navigator.of(context).pushReplacementNamed('home')),
               Padding(padding: EdgeInsets.only(top: 20)),
               _buildButton('Cerrar sesión',
-                  () => Navigator.of(context).pushReplacementNamed('home')),
+                  () => _logOut()),
             ],
           ),
         ),
@@ -125,6 +125,11 @@ class _MyProfileState extends State<MyProfile> {
               borderRadius: BorderRadius.circular(15),
               side: BorderSide(color: Colors.black),
             )));
+  }
+
+  _logOut(){
+    deleteUserPrefs();
+    Navigator.of(context).pushReplacementNamed('login');
   }
 
   // _loadUserData() async {

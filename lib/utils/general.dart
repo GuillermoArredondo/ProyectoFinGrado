@@ -42,6 +42,8 @@ String genId() => Uuid().v1();
 
 //Guarda en las shared prefs el user logged
 saveUserSharedPrefs(UserModel user) async{
+  print('saveUserSharedPrefs');
+  deleteUserPrefs();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var id = user.id;
   var name = user.name;
@@ -51,6 +53,12 @@ saveUserSharedPrefs(UserModel user) async{
   await prefs.setString('name', name!);
   await prefs.setString('email', email!);
   await prefs.setString('pass', pass!);
+}
+
+//Elimina las shared prefs seteadas
+deleteUserPrefs()async{
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.clear();
 }
 
 //Obtiene el user 
