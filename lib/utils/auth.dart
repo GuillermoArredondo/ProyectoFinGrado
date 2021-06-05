@@ -22,13 +22,16 @@ final TWITTER_SECRET = 'fJ5jZWochpcymE81OujJrkIF68GiF7jHzv20XncKZNSKxfUxsm';
 
 //Login con Usuario / Password
 loginUserPass(context, UserModel user) async {
+  alertLoading(context);
   try {
     await _firebase
         .signInWithEmailAndPassword(
             email: user.email!, password: user.password!)
         .then((value) {
           getUserByEmail(context, _firestore, user, false);
+          hidealertLoading(context);
           Navigator.of(context).pushReplacementNamed('home');
+          
     });
   } on FirebaseAuthException catch (error) {
 
@@ -73,6 +76,7 @@ registerUser(context, UserModel user) async {
 
 //Login con Google
 loginGoogle(context) async {
+  alertLoading(context);
   try {
     final googleUser = await GoogleSignIn().signIn();
     final googleAuth = await googleUser!.authentication;
@@ -86,6 +90,8 @@ loginGoogle(context) async {
       user.email = googleUser.email;
       user.name = googleUser.displayName;
       getUserByEmail(context, _firestore, user, true);
+
+      hidealertLoading(context);
       Navigator.of(context).pushReplacementNamed('home');
     });
   } catch (error) {
@@ -100,24 +106,23 @@ loginTwitter(context) async{
     consumerKey: TWITTER_API, 
     consumerSecret: TWITTER_SECRET
   );
-
   try {
     final TwitterLoginResult result = await _loginTW.authorize();
-
     switch(result.status){
-
       case TwitterLoginStatus.loggedIn:
-        //alert(context, '', 'Conectado con ' + result.session.username);
+        alertLoading(context);
         var session = result.session;
         final AuthCredential twitterAuth = TwitterAuthProvider.credential(
           accessToken: session.token,
           secret: session.secret
-        ); 
+        );
+        hidealertLoading(context);
         await _firebase.signInWithCredential(twitterAuth).then((value) {
           UserModel user = new UserModel();
-          user.email = result.session.userId;
+          user.email = '..';
           user.name = result.session.username;
           getUserByEmail(context, _firestore, user, true);
+          
           Navigator.of(context).pushReplacementNamed('home');
         });
         break;
@@ -128,7 +133,6 @@ loginTwitter(context) async{
         alert(context, 'Error', result.errorMessage);
         break;
     }
-    
   } catch (error) {
     alert(context, 'Error', error.toString());
   }

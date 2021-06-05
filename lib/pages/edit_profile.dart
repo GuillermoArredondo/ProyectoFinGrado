@@ -141,7 +141,7 @@ class _EditProfileState extends State<EditProfile> {
         child: FutureBuilder<String>(
             future: getEmailPrefs(),
             builder: (context, snapshot) {
-              if (snapshot.hasData && snapshot.data!.contains('@')) {
+              if (snapshot.hasData) {
                 return TextFormField(
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
@@ -170,36 +170,37 @@ class _EditProfileState extends State<EditProfile> {
           },
           validator: (value) => valEmail(value!)
         );
-              }
-              return TextFormField(
-          keyboardType: TextInputType.emailAddress,
-          decoration: InputDecoration(
-            hintText: "Correo electrónico",
-            icon: Icon(FontAwesomeIcons.envelope, color: Colors.black),
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20.0),
-              borderSide: BorderSide(
-                color: Colors.black,
-                width: 2.0,
-              ),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20.0),
-              borderSide: BorderSide(
-                color: Colors.black,
-                width: 2.0,
-              ),
-            ),
-          ),
-          initialValue: snapshot.data,
-          onSaved: (value) {
-            user.email = value!;
-          },
-          //validator: (value) => valEmail(value!)
-        );
-            },
+        }
+        return Text('Email de twitter no disponible');
+        //       return TextFormField(
+        //   keyboardType: TextInputType.emailAddress,
+        //   decoration: InputDecoration(
+        //     hintText: "Correo electrónico",
+        //     icon: Icon(FontAwesomeIcons.envelope, color: Colors.black),
+        //     border:
+        //         OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
+        //     focusedBorder: OutlineInputBorder(
+        //       borderRadius: BorderRadius.circular(20.0),
+        //       borderSide: BorderSide(
+        //         color: Colors.black,
+        //         width: 2.0,
+        //       ),
+        //     ),
+        //     enabledBorder: OutlineInputBorder(
+        //       borderRadius: BorderRadius.circular(20.0),
+        //       borderSide: BorderSide(
+        //         color: Colors.black,
+        //         width: 2.0,
+        //       ),
+        //     ),
+        //   ),
+        //   //initialValue: 'email de twitter no disponible',
+        //   onSaved: (value) {
+        //     user.email = value!;
+        //   },
+        //   //validator: (value) => valEmail(value!)
+        // );
+        },
       ));
   }
 

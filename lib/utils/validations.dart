@@ -12,7 +12,10 @@ bool _isValPass(String pass) {
 
 //valida el email y devulve respuesta
 valEmail(String email) {
-  if (email.isNotEmpty) {
+  if(email == '..'){
+    return null;
+  }else{
+    if (email.isNotEmpty) {
     if (_isPatEmail(email)) {
       return null;
     } else {
@@ -20,6 +23,7 @@ valEmail(String email) {
     }
   } else {
     return "El campo email no puede estar vacio";
+  }
   }
 }
 

@@ -36,6 +36,35 @@ void alert(BuildContext context, String titulo, String msg,
       });
 }
 
+
+//Muestra un dialog de carga
+alertLoading(context) {
+  showDialog(
+    context: context,
+    barrierDismissible: false, 
+    builder: (BuildContext context) {
+      return WillPopScope(
+        onWillPop: () async =>
+            false, 
+        child: AlertDialog(
+          content: Container(
+            padding: EdgeInsets.all(1),
+            child: CircularProgressIndicator(
+              strokeWidth: 6,
+            ),
+            width: 230,
+            height: 230,
+          ),
+          backgroundColor: Colors.transparent,
+        ),
+      );
+    },
+  );
+}
+
+//Elimina el alert de carga
+hidealertLoading(context) => Navigator.of(context).pop();
+
 //Generación de ID
 String genId() => Uuid().v1();
 
