@@ -108,7 +108,7 @@ class _MyProfileState extends State<MyProfile> {
                 );
               }
               return Text(
-                'El email de twitter no esta disponible',
+                'Email de twitter no disponible',
                 style: TextStyle(fontSize: 16),
               );
             },
