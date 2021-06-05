@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:forumdroid/models/user_model.dart';
 import 'package:forumdroid/utils/auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,12 +33,13 @@ getUserByEmail(context, FirebaseFirestore firestore, UserModel user) async {
     user.password = '';
     addNewUser(firestore, user);
     saveUserSharedPrefs(user);
-
-  }else{
+  } else {
     List<UserModel> list = [];
     for (var doc in users.docs) {
       UserModel user = new UserModel();
-      user.id = doc['id'];
+      print('-------------------------------------------------------');
+      print(doc.id);
+      user.id = doc.id;
       user.email = doc['email'];
       user.name = doc['name'];
       user.password = doc['password'];
@@ -46,6 +48,44 @@ getUserByEmail(context, FirebaseFirestore firestore, UserModel user) async {
     print('getUserByEmail');
     saveUserSharedPrefs(list[0]);
   }
-  
 }
 
+//Edita un usuario de firestore
+editUserFireStore(context, FirebaseFirestore firestore, UserModel user) async {
+
+  CollectionReference collectionReference = firestore.collection('users');
+
+  if (user.password!.isNotEmpty) {
+    print(user.id);
+    collectionReference
+      .doc(user.id)
+      .update({
+        'name' : user.name,
+        'email' : user.email,
+        'password' : user.password
+      }).then((value) => {
+        saveUserSharedPrefs(user),
+        alert(context, 'Éxito', 'Los cambios se han guardado correctamente',
+        () => Navigator.pop(context))
+      }).catchError((error) => {
+        alert(context, 'Error', error.toString())
+      });
+  } else {
+    print(user.id);
+    collectionReference
+      .doc(user.id)
+      .update({
+        'name' : user.name,
+        'email' : user.email,
+      }).then((value) => {
+        saveUserSharedPrefs(user),
+        alert(context, 'Éxito', 'Los cambios se han guardado correctamente',
+        () => Navigator.pop(context))
+      }).catchError((error) => {
+        alert(context, 'Error', error.toString())
+      });
+  }
+
+  
+  
+}

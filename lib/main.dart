@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:forumdroid/models/user_model.dart';
+import 'package:forumdroid/pages/edit_profile.dart';
 import 'package:forumdroid/pages/home.dart';
 import 'package:forumdroid/pages/login.dart';
 import 'package:forumdroid/pages/my_profile.dart';
@@ -31,7 +32,8 @@ class MyApp extends StatelessWidget {
         'login': (BuildContext context) => Login(),
         'registro' : (BuildContext context) => Registro(),
         'home': (BuildContext context) => Home(),
-        //'myprofile' : (BuildContext context) => MyProfile(),
+        'myprofile' : (BuildContext context) => MyProfile(),
+        'edit' : (BuildContext context) => EditProfile(),
       } 
     );
   }

@@ -117,7 +117,7 @@ loginTwitter(context) async{
           UserModel user = new UserModel();
           user.email = result.session.userId;
           user.name = result.session.username;
-      getUserByEmail(context, _firestore, user);
+          getUserByEmail(context, _firestore, user);
           Navigator.of(context).pushReplacementNamed('home');
         });
         break;
@@ -133,6 +133,55 @@ loginTwitter(context) async{
     alert(context, 'Error', error.toString());
   }
 }
+
+logOut(context){
+    _firebase.signOut();
+    deleteUserPrefs();
+    Navigator.of(context).pushReplacementNamed('login');
+}
+
+editUser(context, user)async{
+  user.id = await getIdPrefs();
+  editUserFirebase(context, user);
+}
+
+editUserFirebase(context, UserModel user) async {
+  try {
+    await _firebase
+        .currentUser!.updateEmail(user.email!)
+        .then((value) {
+    });
+  } on FirebaseAuthException catch (error) {
+    if (error.code == 'email-already-in-use') {
+      alert(context, 'Error', 'Ese email ya está registrado');
+    } else {
+      alert(context, 'Error', error.message.toString());
+    }
+  } catch (error) {
+    alert(context, 'Error', error.toString());
+  }
+
+  if (user.password!.isNotEmpty) {
+    try {
+    await _firebase
+        .currentUser!.updatePassword(user.password!)
+        .then((value) {
+          editUserFireStore(context, _firestore, user);
+    });
+  } on FirebaseAuthException catch (error) {
+    alert(context, 'Error', error.message.toString());
+  } catch (error) {
+    alert(context, 'Error', error.toString());
+  }
+  }else{
+    editUserFireStore(context, _firestore, user);
+  }
+
+  
+
+}
+
+
 
 
 

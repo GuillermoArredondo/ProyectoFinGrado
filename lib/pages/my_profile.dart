@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:forumdroid/models/user_model.dart';
+import 'package:forumdroid/pages/edit_profile.dart';
 import 'package:forumdroid/theme/app_theme.dart';
+import 'package:forumdroid/utils/auth.dart';
 import 'package:forumdroid/utils/general.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -41,7 +43,8 @@ class _MyProfileState extends State<MyProfile> {
               _buildEmail(),
               Padding(padding: EdgeInsets.only(top: 70)),
               _buildButton('Editar Perfil',
-                  () => Navigator.of(context).pushReplacementNamed('home')),
+                  () => Navigator.push(
+                context, MaterialPageRoute(builder: (context) => EditProfile()))),
               Padding(padding: EdgeInsets.only(top: 20)),
               _buildButton('Generar QR',
                   () => Navigator.of(context).pushReplacementNamed('home')),
@@ -53,7 +56,7 @@ class _MyProfileState extends State<MyProfile> {
                   () => Navigator.of(context).pushReplacementNamed('home')),
               Padding(padding: EdgeInsets.only(top: 20)),
               _buildButton('Cerrar sesión',
-                  () => _logOut()),
+                  () => logOut(context)),
             ],
           ),
         ),
@@ -127,10 +130,6 @@ class _MyProfileState extends State<MyProfile> {
             )));
   }
 
-  _logOut(){
-    deleteUserPrefs();
-    Navigator.of(context).pushReplacementNamed('login');
-  }
 
   // _loadUserData() async {
   //   SharedPreferences prefs = await SharedPreferences.getInstance();

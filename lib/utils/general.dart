@@ -42,7 +42,7 @@ String genId() => Uuid().v1();
 
 //Guarda en las shared prefs el user logged
 saveUserSharedPrefs(UserModel user) async{
-  print('saveUserSharedPrefs');
+  print(user.id);
   deleteUserPrefs();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var id = user.id;
@@ -61,27 +61,6 @@ deleteUserPrefs()async{
   prefs.clear();
 }
 
-//Obtiene el user 
-getUserFromPrefs() async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    UserModel user = new UserModel();
-    user.id = prefs.getString('id');
-    user.email = prefs.getString('email');
-    user.email = prefs.getString('name');
-    user.email = prefs.getString('password');
-    return user;
-}
-
-//Obtiene los valores del user de prefs
-// Future<UserModel> getPrefs()async{
-//   UserModel user = new UserModel();
-//   SharedPreferences prefs = await SharedPreferences.getInstance();
-//   user.id = prefs.getString('id');
-//   user.email = prefs.getString('email');
-//   user.name = prefs.getString('name');
-//   user.password = prefs.getString('password');
-//   return user;
-// }
 
 Future<String> getNamePrefs()async{
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -96,4 +75,9 @@ Future<String> getIconPrefs()async{
 Future<String> getEmailPrefs()async{
   SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.getString('email') as String;
+}
+
+Future<String> getIdPrefs()async{
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString('id') as String;
 }

@@ -36,6 +36,17 @@ valPass(String pass) {
   }
 }
 
+//valida la password en el caso de la edición y devulve respuesta
+valPassEdit(String pass){
+  if (_isValPass(pass)) {
+      return null;
+  } else {
+      return "La contraseña debe tener mas de 6 caracteres";
+  }
+}
+
+
+//valida el UserName y devuelve la respuesta
 valName(String name) {
   if (name.isNotEmpty) {
     return null;

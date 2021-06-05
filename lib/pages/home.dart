@@ -13,8 +13,6 @@ import 'package:forumdroid/utils/general.dart';
 
 class Home extends StatefulWidget {
 
-  Future<UserModel> callAsyncFetch() => Future.delayed(Duration(seconds: 2), () => getUserFromPrefs());
-
   @override
   _HomeState createState() => _HomeState();
 }
