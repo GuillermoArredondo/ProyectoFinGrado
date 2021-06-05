@@ -22,7 +22,7 @@ void addNewUser(FirebaseFirestore firestore, UserModel user) {
 //Get Usuario por email de Firestore
 //Este método tambien es llamado cuando se intenta logear con una red social,
 //Y el usuario no esta regiustrado en firestore, de esta manera se registrará
-getUserByEmail(context, FirebaseFirestore firestore, UserModel user) async {
+getUserByEmail(context, FirebaseFirestore firestore, UserModel user, bool media) async {
   CollectionReference collectionReference = firestore.collection('users');
   QuerySnapshot<Object?> users =
       await collectionReference.where('email', isEqualTo: user.email).get();
@@ -32,7 +32,7 @@ getUserByEmail(context, FirebaseFirestore firestore, UserModel user) async {
     user.id = genId();
     user.password = '';
     addNewUser(firestore, user);
-    saveUserSharedPrefs(user);
+    saveUserSharedPrefs(user, media);
   } else {
     List<UserModel> list = [];
     for (var doc in users.docs) {
@@ -46,7 +46,7 @@ getUserByEmail(context, FirebaseFirestore firestore, UserModel user) async {
       list.add(user);
     }
     print('getUserByEmail');
-    saveUserSharedPrefs(list[0]);
+    saveUserSharedPrefs(list[0], media);
   }
 }
 
@@ -64,7 +64,7 @@ editUserFireStore(context, FirebaseFirestore firestore, UserModel user) async {
         'email' : user.email,
         'password' : user.password
       }).then((value) => {
-        saveUserSharedPrefs(user),
+        saveUserSharedPrefs(user, true),
         alert(context, 'Éxito', 'Los cambios se han guardado correctamente',
         () => Navigator.pop(context))
       }).catchError((error) => {
@@ -78,9 +78,9 @@ editUserFireStore(context, FirebaseFirestore firestore, UserModel user) async {
         'name' : user.name,
         'email' : user.email,
       }).then((value) => {
-        saveUserSharedPrefs(user),
+        saveUserSharedPrefs(user, true),
         alert(context, 'Éxito', 'Los cambios se han guardado correctamente',
-        () => Navigator.pop(context))
+        () => Navigator.of(context).pushReplacementNamed('myprofile'))
       }).catchError((error) => {
         alert(context, 'Error', error.toString())
       });

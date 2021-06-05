@@ -5,6 +5,7 @@ import 'package:forumdroid/theme/app_theme.dart';
 import 'package:forumdroid/utils/auth.dart';
 import 'package:forumdroid/utils/general.dart';
 import 'package:forumdroid/utils/validations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class EditProfile extends StatefulWidget {
 
@@ -140,7 +141,7 @@ class _EditProfileState extends State<EditProfile> {
         child: FutureBuilder<String>(
             future: getEmailPrefs(),
             builder: (context, snapshot) {
-              if (snapshot.hasData) {
+              if (snapshot.hasData && snapshot.data!.contains('@')) {
                 return TextFormField(
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
@@ -170,7 +171,34 @@ class _EditProfileState extends State<EditProfile> {
           validator: (value) => valEmail(value!)
         );
               }
-              return CircularProgressIndicator();
+              return TextFormField(
+          keyboardType: TextInputType.emailAddress,
+          decoration: InputDecoration(
+            hintText: "Correo electrónico",
+            icon: Icon(FontAwesomeIcons.envelope, color: Colors.black),
+            border:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20.0),
+              borderSide: BorderSide(
+                color: Colors.black,
+                width: 2.0,
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20.0),
+              borderSide: BorderSide(
+                color: Colors.black,
+                width: 2.0,
+              ),
+            ),
+          ),
+          initialValue: snapshot.data,
+          onSaved: (value) {
+            user.email = value!;
+          },
+          //validator: (value) => valEmail(value!)
+        );
             },
       ));
   }
@@ -224,8 +252,9 @@ class _EditProfileState extends State<EditProfile> {
           'Guardar',
           style: new TextStyle(fontSize: 19),
         ),
-        onPressed: () {
-          
+        onPressed: () async {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+
           //validacion del key del formulario
           if (!_formKey.currentState!.validate()) {
             return;
@@ -233,7 +262,14 @@ class _EditProfileState extends State<EditProfile> {
           _formKey.currentState!.save();
           //user.id = _controller!.text;
           //print(user.id);
-          editUser(context, user);
+
+          bool? media = await prefs.getBool('media');
+          if (!media!){
+            editUser(context, user);
+          }else{
+            alert(context, 'Error', 'No puedes editar tu perfil si has accedido con una red social');
+          }
+          
         },
       ),
     );

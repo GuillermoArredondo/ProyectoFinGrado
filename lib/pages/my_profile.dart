@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:forumdroid/models/user_model.dart';
 import 'package:forumdroid/pages/edit_profile.dart';
@@ -99,13 +101,16 @@ class _MyProfileState extends State<MyProfile> {
     return FutureBuilder<String>(
             future: getEmailPrefs(),
             builder: (context, snapshot) {
-              if (snapshot.hasData) {
+              if (snapshot.hasData && snapshot.data!.contains('@')) {
                 return Text(snapshot.data!, style: TextStyle(
                   fontSize: 18,
                 ),
                 );
               }
-              return CircularProgressIndicator();
+              return Text(
+                'El email de twitter no esta disponible',
+                style: TextStyle(fontSize: 16),
+              );
             },
     );
   }

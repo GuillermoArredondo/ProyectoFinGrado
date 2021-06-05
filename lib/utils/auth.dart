@@ -27,7 +27,7 @@ loginUserPass(context, UserModel user) async {
         .signInWithEmailAndPassword(
             email: user.email!, password: user.password!)
         .then((value) {
-          getUserByEmail(context, _firestore, user);
+          getUserByEmail(context, _firestore, user, false);
           Navigator.of(context).pushReplacementNamed('home');
     });
   } on FirebaseAuthException catch (error) {
@@ -85,7 +85,7 @@ loginGoogle(context) async {
       UserModel user = new UserModel();
       user.email = googleUser.email;
       user.name = googleUser.displayName;
-      getUserByEmail(context, _firestore, user);
+      getUserByEmail(context, _firestore, user, true);
       Navigator.of(context).pushReplacementNamed('home');
     });
   } catch (error) {
@@ -117,7 +117,7 @@ loginTwitter(context) async{
           UserModel user = new UserModel();
           user.email = result.session.userId;
           user.name = result.session.username;
-          getUserByEmail(context, _firestore, user);
+          getUserByEmail(context, _firestore, user, true);
           Navigator.of(context).pushReplacementNamed('home');
         });
         break;
