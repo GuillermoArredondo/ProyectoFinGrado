@@ -58,3 +58,19 @@ valName(String name) {
     return "El campo nombre no puede estar vacio";
   }
 }
+
+valTitle(String title){
+  if (title.isNotEmpty) {
+    return null;
+  } else {
+    return "El campo titulo no puede estar vacio";
+  }
+}
+
+valContent(String title){
+  if (title.isNotEmpty) {
+    return null;
+  } else {
+    return "El campo contenido no puede estar vacio";
+  }
+}

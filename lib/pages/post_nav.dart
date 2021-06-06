@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:forumdroid/models/post_model.dart';
 import 'package:forumdroid/theme/app_theme.dart';
+import 'package:forumdroid/utils/firestore.dart';
+import 'package:forumdroid/utils/general.dart';
+import 'package:forumdroid/utils/validations.dart';
 
 class Post extends StatefulWidget {
   @override
@@ -13,8 +16,10 @@ class _PostState extends State<Post> {
   final _LinksKey = GlobalKey<FormState>();
   final _TagsKey = GlobalKey<FormState>();
   final post = PostModel();
-  final _controller1 = TextEditingController();
-  final _controller2 = TextEditingController();
+  final _controllerEnlaces = TextEditingController();
+  final _controllerTags = TextEditingController();
+   final _controllerTitle = TextEditingController();
+  final _controllerContent = TextEditingController();
 
   List<String> listaEnlaces = [];
   List<String> listaHashTags = [];
@@ -58,6 +63,7 @@ class _PostState extends State<Post> {
     return Padding(
       padding: EdgeInsets.all(7),
       child: TextFormField(
+        controller: _controllerTitle,
         decoration: InputDecoration(
           fillColor: Colors.blueGrey,
           hintText: "Título de la publicación",
@@ -80,7 +86,7 @@ class _PostState extends State<Post> {
         onSaved: (value) {
           post.titulo = value!;
         },
-        //validator: (value) => valName(value!)
+        validator: (value) => valTitle(value!)
       ),
     );
   }
@@ -89,6 +95,7 @@ class _PostState extends State<Post> {
     return Padding(
       padding: EdgeInsets.all(7),
       child: TextFormField(
+        controller: _controllerContent,
         maxLines: 10,
         minLines: 5,
         decoration: InputDecoration(
@@ -113,7 +120,7 @@ class _PostState extends State<Post> {
         onSaved: (value) {
           post.contenido = value!;
         },
-        //validator: (value) => valName(value!)
+        validator: (value) => valContent(value!)
       ),
     );
   }
@@ -125,7 +132,7 @@ class _PostState extends State<Post> {
         children: [
           Flexible(
             child: TextFormField(
-              controller: _controller1,
+              controller: _controllerEnlaces,
               decoration: InputDecoration(
                 fillColor: Colors.blueGrey,
                 hintText: "Nuevo enlace",
@@ -156,9 +163,8 @@ class _PostState extends State<Post> {
           ElevatedButton(
             onPressed: () {
               setState(() {
-                listaEnlaces.add(_controller1.text);
-                _controller1.text = '';
-                print(_controller1.text);
+                listaEnlaces.add(_controllerEnlaces.text);
+                _controllerEnlaces.text = '';
               });
               
             },
@@ -219,7 +225,7 @@ class _PostState extends State<Post> {
         children: [
           Flexible(
             child: TextFormField(
-              controller: _controller2,
+              controller: _controllerTags,
               decoration: InputDecoration(
                 fillColor: Colors.blueGrey,
                 hintText: "Nuevo Hashtag",
@@ -250,8 +256,8 @@ class _PostState extends State<Post> {
           ElevatedButton(
             onPressed: () {
               setState(() {
-                listaHashTags.add(_controller2.text);
-                _controller2.text = '';
+                listaHashTags.add('#'+_controllerTags.text);
+                _controllerTags.text = '';
               });
               
             },
@@ -318,11 +324,30 @@ class _PostState extends State<Post> {
             'Publicar',
             style: new TextStyle(fontSize: 19),
           ),
-          onPressed: () {
-            
+          onPressed: () async {
+
+          if (!_formKey.currentState!.validate()) {
+            return;
+          }
+          _formKey.currentState!.save();
+
+          post.enlaces = listaEnlaces;
+          post.hashtags = listaHashTags;
+          await addNewPost(post);
+          alert(context, 'Éxito', 'La publicación se ha realizado correctamente');
+          _resetAll();
           },
         ),
     );
 
+  }
+
+  _resetAll(){
+    setState(() {
+      _controllerTitle.text = '';
+      _controllerContent.text = '';
+      listaEnlaces.clear();
+      listaHashTags.clear();
+    });
   }
 }
