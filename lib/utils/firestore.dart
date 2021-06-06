@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:forumdroid/models/post_model.dart';
 import 'package:forumdroid/models/user_model.dart';
 import 'package:forumdroid/utils/auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -85,7 +86,25 @@ editUserFireStore(context, FirebaseFirestore firestore, UserModel user) async {
         alert(context, 'Error', error.toString())
       });
   }
+}
 
-  
-  
+//añadir nuevo post a Firestore
+addNewPost(PostModel post) async{
+  final firestore = FirebaseFirestore.instance;
+  var id = genId();
+  var title = post.titulo;
+  var content = post.contenido;
+  var listEnlaces = post.enlaces;
+  var listHastags = post.hashtags;
+  var votos = 0;
+  var idUser = await getIdPrefs();
+  firestore.collection("posts").add({
+    "id": '$id',
+    "title": '$title',
+    "content": '$content',
+    "listEnlaces": '$listEnlaces',
+    "listHastags": '$listHastags',
+    "votos": '$votos',
+    "idUser": '$idUser'
+  });
 }

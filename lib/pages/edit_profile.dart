@@ -255,15 +255,11 @@ class _EditProfileState extends State<EditProfile> {
         ),
         onPressed: () async {
           SharedPreferences prefs = await SharedPreferences.getInstance();
-
           //validacion del key del formulario
           if (!_formKey.currentState!.validate()) {
             return;
           }
           _formKey.currentState!.save();
-          //user.id = _controller!.text;
-          //print(user.id);
-
           bool? media = await prefs.getBool('media');
           if (!media!){
             editUser(context, user);
