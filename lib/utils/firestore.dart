@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:forumdroid/models/post_model.dart';
 import 'package:forumdroid/models/user_model.dart';
@@ -8,16 +10,34 @@ import 'general.dart';
 
 //añadir nuevo usuario a Firestore
 void addNewUser(FirebaseFirestore firestore, UserModel user) {
-  var id = genId();
+  print('addNewUser');
+  var id = user.id;
   var name = user.name;
   var email = user.email;
   var password = user.password;
+  var imgUrl = user.imgUrl;
   firestore.collection("users").add({
     "id": '$id',
     "name": '$name',
     "email": '$email',
-    "password": '$password'
+    "password": '$password',
+    "imgUrl" : '$imgUrl'
   });
+}
+
+uploadImgToFireStore(String idUser, File image) async {
+  if(image != null){
+    final storage = FirebaseStorage.instance;
+    var snapshot =  await storage
+    .ref()
+    .child('avatar/'+idUser)
+    .putFile(image)
+    .whenComplete(() => null);
+
+    return snapshot.ref.getDownloadURL();
+  }else{
+    return 'avatar';
+  }
 }
 
 //Get Usuario por email de Firestore
@@ -29,7 +49,6 @@ getUserByEmail(context, FirebaseFirestore firestore, UserModel user, bool media)
       await collectionReference.where('email', isEqualTo: user.email).get();
 
   if (users.docs.isEmpty) {
-    print('getUserByEmail dentro del if');
     user.id = genId();
     user.password = '';
     addNewUser(firestore, user);
@@ -38,12 +57,11 @@ getUserByEmail(context, FirebaseFirestore firestore, UserModel user, bool media)
     List<UserModel> list = [];
     for (var doc in users.docs) {
       UserModel user = new UserModel();
-      print('-------------------------------------------------------');
-      print(doc.id);
       user.id = doc.id;
       user.email = doc['email'];
       user.name = doc['name'];
       user.password = doc['password'];
+      user.imgUrl = doc['imgUrl'];
       list.add(user);
     }
     print('getUserByEmail');
@@ -57,7 +75,7 @@ editUserFireStore(context, FirebaseFirestore firestore, UserModel user) async {
   CollectionReference collectionReference = firestore.collection('users');
 
   if (user.password!.isNotEmpty) {
-    print(user.id);
+    
     collectionReference
       .doc(user.id)
       .update({
@@ -72,7 +90,7 @@ editUserFireStore(context, FirebaseFirestore firestore, UserModel user) async {
         alert(context, 'Error', error.toString())
       });
   } else {
-    print(user.id);
+    
     collectionReference
       .doc(user.id)
       .update({

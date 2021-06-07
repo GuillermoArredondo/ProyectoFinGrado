@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -37,32 +39,39 @@ loginUserPass(context, UserModel user) async {
 
     switch(error.code){
       case 'user-not-found':{
+        hidealertLoading(context);
         alert(context, 'Error', 'Usuario no encontrado');
       }break;
       case 'wrong-password':{
+        hidealertLoading(context);
         alert(context, 'Error', 'Contraseña incorrecta');
       }break;
       default: { 
+        hidealertLoading(context);
         alert(context, 'Error', error.code);
       }
       break;
     }
   } catch (e) {
+    hidealertLoading(context);
     alert(context, 'Error', e.toString());
   }
 }
 
 //Registro de Usuario en Firebase
 registerUser(context, UserModel user) async {
+  alertLoading(context);
   try {
     await _firebase
         .createUserWithEmailAndPassword(
             email: user.email!, password: user.password!)
         .then((value) {
-      alert(context, 'Éxito', 'Usuario registrado correctamente',
-       () => Navigator.pop(context));
-      addNewUser(_firestore, user);
-    });
+          print('registerUser');
+          addNewUser(_firestore, user);
+          hidealertLoading(context);
+          alert(context, 'Éxito', 'Usuario registrado correctamente',
+          () => Navigator.pop(context));
+        });
   } on FirebaseAuthException catch (error) {
     if (error.code == 'email-already-in-use') {
       alert(context, 'Error', 'Ese email ya está registrado');
