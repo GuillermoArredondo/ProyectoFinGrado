@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:forumdroid/models/user_model.dart';
@@ -5,24 +7,25 @@ import 'package:forumdroid/theme/app_theme.dart';
 import 'package:forumdroid/utils/auth.dart';
 import 'package:forumdroid/utils/general.dart';
 import 'package:forumdroid/utils/validations.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EditProfile extends StatefulWidget {
-
   @override
   _EditProfileState createState() => _EditProfileState();
 }
 
 class _EditProfileState extends State<EditProfile> {
-
   final _formKey = GlobalKey<FormState>();
   final user = UserModel();
   TextEditingController? _controller;
+  File? imagen;
+  String? urlImagen;
+  final picker = ImagePicker();
 
   @override
-  void initState() {
-    _controller = TextEditingController();
-    super.initState();
+  initState() {
+    super.initState(); 
   }
 
   @override
@@ -41,112 +44,167 @@ class _EditProfileState extends State<EditProfile> {
                 child: Column(
                     //mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                  _imageUser2(),
-                  //_idUser(),
-                  Padding(padding: EdgeInsets.all(40)),
-                  _userNameInputBox(),
-                  Padding(padding: EdgeInsets.all(10)),
-                  _emailInputBox(),
-                  Padding(padding: EdgeInsets.all(10)),
-                  _passInputBox(),
-                  Padding(padding: EdgeInsets.all(60)),
-                  _saveButton(),
-                ])),
+                      _imageUser(),
+                      //_idUser(),
+                      Padding(padding: EdgeInsets.all(40)),
+                      _userNameInputBox(),
+                      Padding(padding: EdgeInsets.all(10)),
+                      _emailInputBox(),
+                      Padding(padding: EdgeInsets.all(10)),
+                      _passInputBox(),
+                      Padding(padding: EdgeInsets.all(60)),
+                      _saveButton(),
+                    ])),
           ),
         ),
       ),
     );
   }
 
+  // _imageUser() {
+  //   return CircleAvatar(
+  //     child: FutureBuilder<String>(
+  //           future: getIconPrefs(),
+  //           builder: (context, snapshot) {
+  //             if (snapshot.hasData) {
+  //               return Text(snapshot.data!, style: TextStyle(fontSize: 60),);
+  //             }
+  //             return CircularProgressIndicator();
+  //           },
+  //     ),
+  //     radius: 65,
+  //   );
+  // }
+
   _imageUser() {
-    return CircleAvatar(
-      child: FutureBuilder<String>(
-            future: getIconPrefs(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Text(snapshot.data!, style: TextStyle(fontSize: 60),);
-              }
-              return CircularProgressIndicator();
-            },
+    if(imagen == null){
+      return Padding(
+      padding: const EdgeInsets.only(left:110),
+      child: Row(
+        children: <Widget>[
+          FutureBuilder<String>(
+            future: getUrlPrefs(),
+            builder: (context, snapshot){
+          if ((snapshot.hasData) && (snapshot.data != 'null')) {
+            return Container(
+                width: 140,
+                height: 140,
+                decoration: new BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: new DecorationImage(
+                        fit: BoxFit.fill,
+                        image: new NetworkImage(snapshot.data!))));
+          }
+          return  CircleAvatar(
+                 child: FutureBuilder<String>(
+        future: getIconPrefs(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Text(snapshot.data!, style: TextStyle(fontSize: 50),);
+          }
+          return  CircularProgressIndicator();
+        },
       ),
-      radius: 65,
-    );
-  }
-
-
-  _imageUser2(){
-    return Container(
-      width: 190.0,
-      height: 190.0,
-      decoration: new BoxDecoration(
-          shape: BoxShape.circle,
-          image: new DecorationImage(
-          fit: BoxFit.fill,
-          image: new NetworkImage(
-                 "https://i.imgur.com/BoN9kdC.png")
-                 )
-    ));
-  }
-
-
-  _idUser(){
-    return Visibility (
-      visible: true,
-      child: Container(
-        child: FutureBuilder<String>(
-              future: getIdPrefs(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return TextFormField(
-                    initialValue : snapshot.data,
-                    controller: _controller,
-                  );
-                }
-                return CircularProgressIndicator();
-              },
-        ),
-        
+                 radius: 65,
+               );
+        },
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 80, left: 0),
+            child: ElevatedButton(
+                onPressed: () {
+                  seleccionarImagen(context);
+                },
+                child: FaIcon(
+                  FontAwesomeIcons.plusCircle,
+                  size: 20,
+                ),
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.all(0),
+                  primary: Colors.black,
+                  shape: CircleBorder(),
+                ),
+              ),
+          ),
+      ],
       ),
     );
+    }else{
+      return Padding(
+      padding: const EdgeInsets.only(left:110),
+      child: Row(
+        children: <Widget>[
+          Container(
+            width: 140,
+            height: 140,
+            decoration: new BoxDecoration(
+              border: Border.all(color: Colors.black, width: 1),
+              shape: BoxShape.circle,
+              image: new DecorationImage(
+                fit: BoxFit.fill,
+                image: FileImage(imagen!)
+              )
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 80, left: 0),
+            child: ElevatedButton(
+                onPressed: () {
+                  seleccionarImagen(context);
+                },
+                child: FaIcon(
+                  FontAwesomeIcons.plusCircle,
+                  size: 20,
+                ),
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.all(0),
+                  primary: Colors.black,
+                  shape: CircleBorder(),
+                ),
+              ),
+          ),
+      ],
+      ),
+    );
+    }
   }
 
   _userNameInputBox() {
     return Container(
-        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 0),
-        child: FutureBuilder<String>(
-            future: getNamePrefs(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return TextFormField(
-          decoration: InputDecoration(
-            hintText: "Nombre de usuario",
-            icon: Icon(FontAwesomeIcons.user, color: Colors.black),
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20.0),
-              borderSide: BorderSide(
-                color: Colors.black,
-                width: 2.0,
-              ),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20.0),
-              borderSide: BorderSide(
-                color: Colors.black,
-                width: 2.0,
-              ),
-            ),
-          ),
-          initialValue: snapshot.data,
-          onSaved: (value) {
-            user.name = value!;
-          },
-          validator: (value) => valName(value!)
-        );
-              }
-              return CircularProgressIndicator();
-            },
+      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+      child: FutureBuilder<String>(
+        future: getNamePrefs(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return TextFormField(
+                decoration: InputDecoration(
+                  hintText: "Nombre de usuario",
+                  icon: Icon(FontAwesomeIcons.user, color: Colors.black),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15.0)),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                    borderSide: BorderSide(
+                      color: Colors.black,
+                      width: 2.0,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                    borderSide: BorderSide(
+                      color: Colors.black,
+                      width: 2.0,
+                    ),
+                  ),
+                ),
+                initialValue: snapshot.data,
+                onSaved: (value) {
+                  user.name = value!;
+                },
+                validator: (value) => valName(value!));
+          }
+          return CircularProgressIndicator();
+        },
       ),
     );
   }
@@ -155,41 +213,40 @@ class _EditProfileState extends State<EditProfile> {
     return Container(
         padding: EdgeInsets.symmetric(horizontal: 15, vertical: 0),
         child: FutureBuilder<String>(
-            future: getEmailPrefs(),
-            builder: (context, snapshot) {
-              if ((snapshot.hasData) && (snapshot.data!.contains('@'))) {
-                return TextFormField(
-          keyboardType: TextInputType.emailAddress,
-          decoration: InputDecoration(
-            hintText: "Correo electrónico",
-            icon: Icon(FontAwesomeIcons.envelope, color: Colors.black),
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20.0),
-              borderSide: BorderSide(
-                color: Colors.black,
-                width: 2.0,
-              ),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20.0),
-              borderSide: BorderSide(
-                color: Colors.black,
-                width: 2.0,
-              ),
-            ),
-          ),
-          initialValue: snapshot.data,
-          onSaved: (value) {
-            user.email = value!;
+          future: getEmailPrefs(),
+          builder: (context, snapshot) {
+            if ((snapshot.hasData) && (snapshot.data!.contains('@'))) {
+              return TextFormField(
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    hintText: "Correo electrónico",
+                    icon: Icon(FontAwesomeIcons.envelope, color: Colors.black),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15.0)),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                      borderSide: BorderSide(
+                        color: Colors.black,
+                        width: 2.0,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                      borderSide: BorderSide(
+                        color: Colors.black,
+                        width: 2.0,
+                      ),
+                    ),
+                  ),
+                  initialValue: snapshot.data,
+                  onSaved: (value) {
+                    user.email = value!;
+                  },
+                  validator: (value) => valEmail(value!));
+            }
+            return Text('Email de twitter no disponible');
           },
-          validator: (value) => valEmail(value!)
-        );
-        }
-        return Text('Email de twitter no disponible');
-        },
-      ));
+        ));
   }
 
   _passInputBox() {
@@ -249,14 +306,85 @@ class _EditProfileState extends State<EditProfile> {
           }
           _formKey.currentState!.save();
           bool? media = await prefs.getBool('media');
-          if (!media!){
+          if (!media!) {
             editUser(context, user);
-          }else{
-            alert(context, 'Error', 'No puedes editar tu perfil si has accedido con una red social');
+          } else {
+            alert(context, 'Error',
+                'No puedes editar tu perfil si has accedido con una red social');
           }
-          
         },
       ),
     );
+  }
+
+  seleccionarImagen(context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            contentPadding: EdgeInsets.all(0),
+            content: SingleChildScrollView(
+              child: Column(
+                children: [
+                  InkWell(
+                    onTap: () {
+                      _getImage(1);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                          border: Border(bottom: BorderSide(width: 1))),
+                      child: Row(
+                        children: [
+                          Expanded(
+                              child: Text(
+                            'Cámara',
+                            style: TextStyle(fontSize: 15),
+                          )),
+                          Icon(FontAwesomeIcons.camera)
+                        ],
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      _getImage(2);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                          border: Border(bottom: BorderSide(width: 1))),
+                      child: Row(
+                        children: [
+                          Expanded(
+                              child: Text(
+                            'Galería',
+                            style: TextStyle(fontSize: 15),
+                          )),
+                          Icon(FontAwesomeIcons.solidFileImage)
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  _getImage(op) async {
+    var pickedFile;
+    if (op == 1) {
+      pickedFile = await picker.getImage(source: ImageSource.camera);
+    } else {
+      pickedFile = await picker.getImage(source: ImageSource.gallery);
+    }
+    setState(() {
+      if (pickedFile != null) {
+        imagen = File(pickedFile.path);
+      }
+      Navigator.pop(context);
+    });
   }
 }

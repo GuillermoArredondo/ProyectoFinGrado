@@ -82,7 +82,15 @@ class _MyProfileState extends State<MyProfile> {
                         image: new NetworkImage(snapshot.data!))));
           }
           return  CircleAvatar(
-                 child: Text('C', style: TextStyle(fontSize: 50),),
+                 child: FutureBuilder<String>(
+        future: getIconPrefs(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Text(snapshot.data!, style: TextStyle(fontSize: 50),);
+          }
+          return  CircularProgressIndicator();
+        },
+      ),
                  radius: 65,
                );
         },
