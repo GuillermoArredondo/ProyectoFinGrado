@@ -7,6 +7,7 @@ class PostModel {
   List<String>? hashtags;
   List<String>? idUser;
   int? votos;
+  String? fecha;
   //List<Comentarios> comentarios 
   //List<String>? urlImages;
 
@@ -17,7 +18,8 @@ class PostModel {
     this.enlaces,
     this.hashtags,
     this.idUser,
-    this.votos
+    this.votos,
+    this.fecha
     //this.urlImages,
   });
 

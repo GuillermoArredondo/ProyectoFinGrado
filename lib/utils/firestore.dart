@@ -42,6 +42,27 @@ Future<String> uploadImgToFireStore(String idUser, File image) async {
   }
 }
 
+//Obtiene la url de la img de un usuario por id
+Future<String> getUserImage(String idUser) async {
+  final storage = FirebaseStorage.instance;
+  String downloadURL = await storage.ref('avatar/$idUser').getDownloadURL();
+  return downloadURL;
+}
+
+//Obtiene el UserName de un usuario por id
+Future<String> getUserNameById(String idUser) async {
+  final firestore = FirebaseFirestore.instance;
+  CollectionReference collectionReference = firestore.collection('users');
+  QuerySnapshot<Object?> users =
+      await collectionReference.where('id', isEqualTo: idUser).get();
+
+  String name = '';
+  for (var doc in users.docs) {
+    name = doc['name'];
+  }
+  return name;
+}
+
 //Cambia la imagen del usuario
 changeImageUser(String idUser, File image) async {
   if (image != null) {
@@ -99,8 +120,12 @@ editUserFireStore(context, FirebaseFirestore firestore, UserModel user) async {
   if (user.password!.isNotEmpty) {
     collectionReference
         .doc(user.id)
-        .update(
-            {'name': user.name, 'email': user.email, 'password': user.password, 'imgUrl':user.imgUrl})
+        .update({
+          'name': user.name,
+          'email': user.email,
+          'password': user.password,
+          'imgUrl': user.imgUrl
+        })
         .then((value) => {
               saveUserSharedPrefs(user),
               alert(
@@ -113,11 +138,7 @@ editUserFireStore(context, FirebaseFirestore firestore, UserModel user) async {
   } else {
     collectionReference
         .doc(user.id)
-        .update({
-          'name': user.name,
-          'email': user.email,
-          'imgUrl':user.imgUrl
-        })
+        .update({'name': user.name, 'email': user.email, 'imgUrl': user.imgUrl})
         .then((value) => {
               saveUserSharedPrefs(user),
               alert(
@@ -139,7 +160,8 @@ addNewPost(PostModel post) async {
   var listEnlaces = post.enlaces;
   var listHastags = post.hashtags;
   var votos = 0;
-  var idUser = await getIdPrefs();
+  var idUser = await getIdUserPrefs();
+  var fecha = post.fecha;
   firestore.collection("posts").add({
     "id": '$id',
     "title": '$title',
@@ -147,6 +169,7 @@ addNewPost(PostModel post) async {
     "listEnlaces": '$listEnlaces',
     "listHastags": '$listHastags',
     "votos": '$votos',
-    "idUser": '$idUser'
+    "idUser": '$idUser',
+    "fecha": '$fecha'
   });
 }

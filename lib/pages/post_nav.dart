@@ -5,6 +5,7 @@ import 'package:forumdroid/theme/app_theme.dart';
 import 'package:forumdroid/utils/firestore.dart';
 import 'package:forumdroid/utils/general.dart';
 import 'package:forumdroid/utils/validations.dart';
+import 'package:intl/intl.dart';
 
 class Post extends StatefulWidget {
   @override
@@ -333,6 +334,11 @@ class _PostState extends State<Post> {
 
           post.enlaces = listaEnlaces;
           post.hashtags = listaHashTags;
+          
+          final DateTime now = DateTime.now();
+          final DateFormat formatter = DateFormat('dd-MM-yyyy');
+          final String formatted = formatter.format(now);
+          post.fecha = formatted;
           await addNewPost(post);
           alert(context, 'Éxito', 'La publicación se ha realizado correctamente');
           _resetAll();
