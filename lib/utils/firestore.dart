@@ -83,7 +83,7 @@ getUserByEmail(
       user.name = doc['name'];
       user.password = doc['password'];
       user.imgUrl = doc['imgUrl'];
-      user.media = false;
+      user.media = media;
       list.add(user);
     }
     print('getUserByEmail');
