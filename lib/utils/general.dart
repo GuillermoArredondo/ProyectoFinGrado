@@ -63,23 +63,40 @@ hidealertLoading(context) => Navigator.of(context).pop();
 String genId() => Uuid().v1();
 
 //Guarda en las shared prefs el user logged
-saveUserSharedPrefs(UserModel user, bool media) async {
+saveUserSharedPrefs(UserModel user) async {
   deleteUserPrefs();
   SharedPreferences prefs = await SharedPreferences.getInstance();
+  var idUser = user.idUser;
   var id = user.id;
   var name = user.name;
   var email = user.email;
   var pass = user.password;
   var imgUrl = user.imgUrl;
+  var mediaU = user.media;
   await prefs.setString('id', id!);
   await prefs.setString('name', name!);
   await prefs.setString('email', email!);
   await prefs.setString('pass', pass!);
   await prefs.setString('imgUrl', imgUrl!);
-  await prefs.setBool('media', media);
-  print('--------------------------------------------------------------------');
-  print('URL DE LA IMAGEN EN saveUserSharedPrefs: ' + imgUrl);
-  print('--------------------------------------------------------------------');
+  await prefs.setBool('media', mediaU!);
+  await prefs.setString('idUser', idUser!);
+}
+
+Future<dynamic> getUserfromSharePrefs() async {
+  final user = UserModel();
+  user.idUser = await getIdUserPrefs();
+  user.id = await getIdPrefs();
+  user.name = await getNamePrefs();
+  user.email = await getEmailPrefs();
+  user.imgUrl = await getUrlPrefs();
+  user.media = await getMediaPrefs();
+  return user;
+}
+
+UserModel? getUser() {
+  getUserfromSharePrefs().then((value) {
+    return value;
+  });
 }
 
 //Elimina las shared prefs seteadas
@@ -108,7 +125,17 @@ Future<String> getIdPrefs() async {
   return prefs.getString('id') as String;
 }
 
+Future<String> getIdUserPrefs() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString('idUser') as String;
+}
+
 Future<String> getUrlPrefs() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.getString('imgUrl') as String;
+}
+
+Future<bool?> getMediaPrefs() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getBool('media');
 }

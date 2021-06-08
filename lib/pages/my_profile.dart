@@ -15,7 +15,6 @@ class MyProfile extends StatefulWidget {
 }
 
 class _MyProfileState extends State<MyProfile> {
-
   @override
   void initState() {
     super.initState();
@@ -44,10 +43,7 @@ class _MyProfileState extends State<MyProfile> {
               Padding(padding: EdgeInsets.only(top: 10)),
               _buildEmail(),
               Padding(padding: EdgeInsets.only(top: 70)),
-              _buildButton(
-                  'Editar Perfil',
-                  () => Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => EditProfile()))),
+              _buildButton('Editar Perfil', () => _buildRoute()),
               Padding(padding: EdgeInsets.only(top: 20)),
               _buildButton('Generar QR',
                   () => Navigator.of(context).pushReplacementNamed('home')),
@@ -66,6 +62,13 @@ class _MyProfileState extends State<MyProfile> {
     );
   }
 
+  _buildRoute() {
+    getUserfromSharePrefs().then((value) {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => EditProfile(value)));
+    });
+  }
+
   _imageUser() {
     return Container(
       child: FutureBuilder<String>(
@@ -81,18 +84,21 @@ class _MyProfileState extends State<MyProfile> {
                         fit: BoxFit.fill,
                         image: new NetworkImage(snapshot.data!))));
           }
-          return  CircleAvatar(
-                 child: FutureBuilder<String>(
-        future: getIconPrefs(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Text(snapshot.data!, style: TextStyle(fontSize: 50),);
-          }
-          return  CircularProgressIndicator();
-        },
-      ),
-                 radius: 65,
-               );
+          return CircleAvatar(
+            child: FutureBuilder<String>(
+              future: getIconPrefs(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Text(
+                    snapshot.data!,
+                    style: TextStyle(fontSize: 50),
+                  );
+                }
+                return CircularProgressIndicator();
+              },
+            ),
+            radius: 65,
+          );
         },
       ),
     );

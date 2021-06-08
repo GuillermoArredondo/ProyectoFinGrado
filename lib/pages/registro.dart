@@ -265,7 +265,7 @@ class _RegistroState extends State<Registro> {
           if(imagen != null){
             user.imgUrl = await uploadImgToFireStore(user.id!, imagen!);
           }else{
-            user.imgUrl = 'avatar';
+            user.imgUrl = 'null';
           }
           registerUser(context, user);         
         },

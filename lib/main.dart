@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
         'registro' : (BuildContext context) => Registro(),
         'home': (BuildContext context) => Home(),
         'myprofile' : (BuildContext context) => MyProfile(),
-        'edit' : (BuildContext context) => EditProfile(),
+        //'edit' : (BuildContext context) => EditProfile(),
       } 
     );
   }

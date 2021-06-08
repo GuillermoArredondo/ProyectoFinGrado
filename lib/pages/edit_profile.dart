@@ -1,16 +1,20 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:forumdroid/models/user_model.dart';
 import 'package:forumdroid/theme/app_theme.dart';
 import 'package:forumdroid/utils/auth.dart';
+import 'package:forumdroid/utils/firestore.dart';
 import 'package:forumdroid/utils/general.dart';
 import 'package:forumdroid/utils/validations.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EditProfile extends StatefulWidget {
+  var user = UserModel();
+
+  EditProfile(this.user);
+
   @override
   _EditProfileState createState() => _EditProfileState();
 }
@@ -18,14 +22,18 @@ class EditProfile extends StatefulWidget {
 class _EditProfileState extends State<EditProfile> {
   final _formKey = GlobalKey<FormState>();
   final user = UserModel();
-  TextEditingController? _controller;
   File? imagen;
   String? urlImagen;
   final picker = ImagePicker();
+  String? idUser;
+  var userTest = UserModel();
 
   @override
   initState() {
-    super.initState(); 
+    userTest = this.widget.user;
+    print(userTest.imgUrl);
+    print(userTest.media);
+    super.initState();
   }
 
   @override
@@ -77,78 +85,44 @@ class _EditProfileState extends State<EditProfile> {
   // }
 
   _imageUser() {
-    if(imagen == null){
+    if (imagen == null) {
       return Padding(
-      padding: const EdgeInsets.only(left:110),
-      child: Row(
-        children: <Widget>[
-          FutureBuilder<String>(
-            future: getUrlPrefs(),
-            builder: (context, snapshot){
-          if ((snapshot.hasData) && (snapshot.data != 'null')) {
-            return Container(
-                width: 140,
-                height: 140,
-                decoration: new BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: new DecorationImage(
-                        fit: BoxFit.fill,
-                        image: new NetworkImage(snapshot.data!))));
-          }
-          return  CircleAvatar(
-                 child: FutureBuilder<String>(
-        future: getIconPrefs(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Text(snapshot.data!, style: TextStyle(fontSize: 50),);
-          }
-          return  CircularProgressIndicator();
-        },
-      ),
-                 radius: 65,
-               );
-        },
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 80, left: 0),
-            child: ElevatedButton(
-                onPressed: () {
-                  seleccionarImagen(context);
-                },
-                child: FaIcon(
-                  FontAwesomeIcons.plusCircle,
-                  size: 20,
-                ),
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.all(0),
-                  primary: Colors.black,
-                  shape: CircleBorder(),
-                ),
-              ),
-          ),
-      ],
-      ),
-    );
-    }else{
-      return Padding(
-      padding: const EdgeInsets.only(left:110),
-      child: Row(
-        children: <Widget>[
-          Container(
-            width: 140,
-            height: 140,
-            decoration: new BoxDecoration(
-              border: Border.all(color: Colors.black, width: 1),
-              shape: BoxShape.circle,
-              image: new DecorationImage(
-                fit: BoxFit.fill,
-                image: FileImage(imagen!)
-              )
+        padding: const EdgeInsets.only(left: 110),
+        child: Row(
+          children: <Widget>[
+            FutureBuilder<String>(
+              future: getUrlPrefs(),
+              builder: (context, snapshot) {
+                if ((snapshot.hasData) && (snapshot.data != 'null')) {
+                  return Container(
+                      width: 140,
+                      height: 140,
+                      decoration: new BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: new DecorationImage(
+                              fit: BoxFit.fill,
+                              image: new NetworkImage(snapshot.data!))));
+                }
+                return CircleAvatar(
+                  child: FutureBuilder<String>(
+                    future: getIconPrefs(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Text(
+                          snapshot.data!,
+                          style: TextStyle(fontSize: 50),
+                        );
+                      }
+                      return CircularProgressIndicator();
+                    },
+                  ),
+                  radius: 65,
+                );
+              },
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 80, left: 0),
-            child: ElevatedButton(
+            Padding(
+              padding: const EdgeInsets.only(bottom: 80, left: 0),
+              child: ElevatedButton(
                 onPressed: () {
                   seleccionarImagen(context);
                 },
@@ -162,10 +136,44 @@ class _EditProfileState extends State<EditProfile> {
                   shape: CircleBorder(),
                 ),
               ),
-          ),
-      ],
-      ),
-    );
+            ),
+          ],
+        ),
+      );
+    } else {
+      return Padding(
+        padding: const EdgeInsets.only(left: 110),
+        child: Row(
+          children: <Widget>[
+            Container(
+              width: 140,
+              height: 140,
+              decoration: new BoxDecoration(
+                  border: Border.all(color: Colors.black, width: 1),
+                  shape: BoxShape.circle,
+                  image: new DecorationImage(
+                      fit: BoxFit.fill, image: FileImage(imagen!))),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 80, left: 0),
+              child: ElevatedButton(
+                onPressed: () {
+                  seleccionarImagen(context);
+                },
+                child: FaIcon(
+                  FontAwesomeIcons.plusCircle,
+                  size: 20,
+                ),
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.all(0),
+                  primary: Colors.black,
+                  shape: CircleBorder(),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
     }
   }
 
@@ -289,32 +297,88 @@ class _EditProfileState extends State<EditProfile> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 15, vertical: 0),
       child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-            primary: app_theme.primaryColor,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            minimumSize: new Size(190, 50)),
-        child: Text(
-          'Guardar',
-          style: new TextStyle(fontSize: 19),
-        ),
-        onPressed: () async {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          //validacion del key del formulario
-          if (!_formKey.currentState!.validate()) {
-            return;
-          }
-          _formKey.currentState!.save();
-          bool? media = await prefs.getBool('media');
-          if (!media!) {
-            editUser(context, user);
-          } else {
-            alert(context, 'Error',
-                'No puedes editar tu perfil si has accedido con una red social');
-          }
-        },
-      ),
+          style: ElevatedButton.styleFrom(
+              primary: app_theme.primaryColor,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)),
+              minimumSize: new Size(190, 50)),
+          child: Text(
+            'Guardar',
+            style: new TextStyle(fontSize: 19),
+          ),
+          onPressed: () async {
+            //validacion del key del formulario
+            if (!_formKey.currentState!.validate()) {
+              return;
+            }
+            _formKey.currentState!.save();
+
+            if (!userTest.media!) {
+              if (imagen != null) {
+                uploadImgToFireStore(userTest.idUser!, imagen!)
+                    .then((value) {
+                      user.imgUrl = value;
+                      user.id = userTest.id;
+                      user.idUser = userTest.idUser;
+                      user.media = false;
+                      print('edit_profile: ' + user.imgUrl!);
+                      editUser(context, user);
+                      });
+                
+              } else {
+                user.imgUrl = userTest.imgUrl;
+                user.id = userTest.id;
+                user.idUser = userTest.idUser;
+                user.media = false;
+                user.imgUrl = 'null';
+                editUser(context, user);
+              }
+            } else {
+              alert(context, 'Error',
+                  'No puedes editar tu perfil si has accedido con una red social');
+            }
+
+            //getIdUserPrefs().then((value) => uploadImgToFireStore(value, imagen!));
+            //await prefs.getBool('media').then((value) => print(value));
+            //bool media = false;
+            //media = await  prefs.getBool('media')!;
+            //getMediaPrefs().then((value) => _edit(value));
+            // if (!media) {
+            //   if (imagen != null) {
+            //     print('Estoy en no media y si foto');
+            //     getIdUserPrefs()
+            //         .then((value) => uploadImgToFireStore(value, imagen!));
+            //     editUser(context, user);
+            //     hidealertLoading(context);
+            //   } else {
+            //     editUser(context, user);
+            //   }
+            // } else {
+            //   alert(context, 'Error',
+            //       'No puedes editar tu perfil si has accedido con una red social');
+            // }
+            print(userTest.idUser);
+          }),
     );
+  }
+
+  _edit(value) {
+    if (!value) {
+      if (imagen != null) {
+        getIdUserPrefs().then((value) => uploadImgToFireStore(value, imagen!));
+        editUser(context, user);
+      } else {
+        editUser(context, user);
+      }
+    } else {
+      alert(context, 'Error',
+          'No puedes editar tu perfil si has accedido con una red social');
+    }
+  }
+
+  _setId(value) {
+    idUser = value;
+    //print(idUser);
   }
 
   seleccionarImagen(context) {

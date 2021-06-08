@@ -30,6 +30,7 @@ loginUserPass(context, UserModel user) async {
         .signInWithEmailAndPassword(
             email: user.email!, password: user.password!)
         .then((value) {
+          user.media = false;
           getUserByEmail(context, _firestore, user, false);
           hidealertLoading(context);
           Navigator.of(context).pushReplacementNamed('home');
@@ -98,6 +99,7 @@ loginGoogle(context) async {
       UserModel user = new UserModel();
       user.email = googleUser.email;
       user.name = googleUser.displayName;
+      user.media = true;
       getUserByEmail(context, _firestore, user, true);
 
       hidealertLoading(context);
@@ -130,6 +132,7 @@ loginTwitter(context) async{
           UserModel user = new UserModel();
           user.email = '..';
           user.name = result.session.username;
+          user.media = true;
           getUserByEmail(context, _firestore, user, true);
           
           Navigator.of(context).pushReplacementNamed('home');
@@ -154,6 +157,7 @@ logOut(context){
 }
 
 editUser(context, user)async{
+  print('editUser: ' + user.imgUrl!);
   user.id = await getIdPrefs();
   editUserFirebase(context, user);
 }
@@ -179,6 +183,7 @@ editUserFirebase(context, UserModel user) async {
     await _firebase
         .currentUser!.updatePassword(user.password!)
         .then((value) {
+          print('editUserFirebase: ' + user.imgUrl!);
           editUserFireStore(context, _firestore, user);
     });
   } on FirebaseAuthException catch (error) {
@@ -187,6 +192,7 @@ editUserFirebase(context, UserModel user) async {
     alert(context, 'Error', error.toString());
   }
   }else{
+    print('editUserFirebase: ' + user.imgUrl!);
     editUserFireStore(context, _firestore, user);
   }
 
