@@ -68,17 +68,34 @@ class _ProfileState extends State<Profile> {
       children: [
         Container(
           padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
-          child: FutureBuilder<String>(
-            future: getIconPrefs(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return CircleAvatar(child: new Text(snapshot.data!));
-              }
-              return CircularProgressIndicator();
-            },
-
-          ),
-        ),
+      child: FutureBuilder<String>(
+        future: getUrlPrefs(),
+        builder: (context, snapshot) {
+          if ((snapshot.hasData) && (snapshot.data != 'null')) {
+            return Container(
+                width: 45,
+                height: 45,
+                decoration: new BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: new DecorationImage(
+                        fit: BoxFit.fill,
+                        image: new NetworkImage(snapshot.data!))));
+          }
+          return  CircleAvatar(
+                 child: FutureBuilder<String>(
+        future: getIconPrefs(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Text(snapshot.data!, style: TextStyle(fontSize: 20),);
+          }
+          return  CircularProgressIndicator();
+        },
+      ),
+                 radius: 22,
+               );
+        },
+      ),
+    ),
         Container(
           padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
           child: FutureBuilder<String>(
