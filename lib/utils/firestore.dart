@@ -151,7 +151,7 @@ editUserFireStore(context, FirebaseFirestore firestore, UserModel user) async {
   }
 }
 
-//añadir nuevo post a Firestore
+//Añadir nuevo post a Firestore
 addNewPost(PostModel post) async {
   final firestore = FirebaseFirestore.instance;
   var id = genId();
@@ -166,8 +166,8 @@ addNewPost(PostModel post) async {
     "id": '$id',
     "title": '$title',
     "content": '$content',
-    "listEnlaces": '$listEnlaces',
-    "listHastags": '$listHastags',
+    "listEnlaces": FieldValue.arrayUnion(listEnlaces!),
+    "listHastags": FieldValue.arrayUnion(listHastags!),
     "votos": '$votos',
     "idUser": '$idUser',
     "fecha": '$fecha'
