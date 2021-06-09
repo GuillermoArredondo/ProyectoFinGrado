@@ -1,78 +1,69 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:forumdroid/pages/post_detail.dart';
 import 'package:forumdroid/utils/firestore.dart';
-import 'package:forumdroid/utils/general.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class Feed extends StatefulWidget {
+class PostDetail extends StatefulWidget {
+
+  QueryDocumentSnapshot<Object?> document;
+
+  PostDetail(this.document);
+
   @override
-  _FeedState createState() => _FeedState();
+  _PostDetailState createState() => _PostDetailState();
 }
 
-class _FeedState extends State<Feed> {
+class _PostDetailState extends State<PostDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Publicaciones'),
+        title: Text(''),
         centerTitle: true,
       ),
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('posts').snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (!snapshot.hasData) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            return _buildListview(snapshot);
-          }
-        },
-      ),
-    );
-  }
-
-  _buildListview(AsyncSnapshot<QuerySnapshot<Object?>> snapshot) {
-    return ListView(
-      children: snapshot.data!.docs.map((document) {
-        return Center(
-          child: Padding(
-              padding: const EdgeInsets.all(10), child: _bluidItem(document)),
-        );
-      }).toList(),
-    );
-  }
-
-  _bluidItem(QueryDocumentSnapshot<Object?> document) {
-    return InkWell(
-      onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => PostDetail(document)));
-      },
-      child: Container(
-          width: 360,
-          height: 265,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 10, top: 10),
-            child: _buildContainer(document),
+      body: 
+         Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Color.fromRGBO(226, 247, 255, 1),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: Colors.black, width: 1)),
+                child: _buildContainer(),
+              ),
+              Padding(padding: EdgeInsets.only(top: 10)),
+              Container(
+                decoration: BoxDecoration(
+                  color: Color.fromRGBO(226, 247, 255, 1),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: Colors.black, width: 1)),
+                child: _buildListLinks(),
+              ),
+              //_buildListLinks()
+            ],
           ),
-          decoration: BoxDecoration(
-              color: Color.fromRGBO(226, 247, 255, 1),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.black, width: 1))),
+        ),
+      
     );
   }
 
-  _buildContainer(QueryDocumentSnapshot<Object?> document) {
-    return Container(
-      child: Column(
-        children: [
-          _buildRow1(document),
-          _buildRow2(document),
-          _buildRow3(document),
-          _buildRow4(document)
-        ],
+  _buildContainer(){
+    return Padding(
+      padding: const EdgeInsets.only(left: 10, top: 10),
+      child: Container(
+        height: _buildHeight(widget.document),
+        width: 500,
+        child: Column(
+          children: [
+            _buildRow1(widget.document),
+            _buildRow2(widget.document),
+            _buildRow3(widget.document),
+            _buildRow4(widget.document)
+          ],
+        ),
       ),
     );
   }
@@ -197,7 +188,6 @@ class _FeedState extends State<Feed> {
     return Row(
       children: [
         Container(
-          alignment: Alignment.bottomLeft,
           width: 330,
           margin: EdgeInsets.fromLTRB(10, 20, 0, 0),
           height: 40.0,
@@ -230,17 +220,69 @@ class _FeedState extends State<Feed> {
             border: Border.all(color: Colors.black, width: 1)));
   }
 
+
+  _buildListLinks(){
+    List<String> links = List.from(widget.document['listEnlaces']);
+    return Container(
+      width: 500,
+      height: links.length * 79,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Text('Enlaces:', style: _buildTextStyle(16.0, true),)
+            ),
+          ),
+          _buildList(links)
+        ],
+      )
+    );
+  }
+
+  _buildList(List<String> links){
+    return Container(
+      height: links.length * 50.0,
+      width: 360,
+      child: ListView.builder(
+            itemBuilder: (context, i){
+              return _buildRowLink(links[i]);
+            },
+            itemCount: links.length,
+          ),
+    );
+  }
+
+
+  _buildRowLink(String link){
+    return ListTile(
+        title: Text(link, style: TextStyle(color: Colors.blue),),
+        //trailing: new Icon(FontAwesomeIcons.trash),
+        onTap: () async {
+          if(await canLaunch('https://'+link)){
+            await launch('https://'+link);
+          }else{
+            print('NO');
+          }
+
+        },
+    );
+  }
+
+
   _textContent(QueryDocumentSnapshot<Object?> document) {
-    if (document['content'].toString().length > 151) {
-      return Text(
-        document['content'].toString().substring(0, 215) + '...',
-        style: _buildTextStyle(14.0, false),
-      );
-    } else {
       return Text(
         document['content'],
         style: _buildTextStyle(15.0, false),
-      );
+      ); 
+  }
+
+  _buildHeight(QueryDocumentSnapshot<Object?> document){
+    if(document['content'].toString().length < 100){
+      return 205.0;
+    }else{
+      return document['content'].toString().length * 0.75;
     }
   }
 

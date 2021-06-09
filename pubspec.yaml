@@ -39,6 +39,7 @@ dependencies:
   shared_preferences:
   image_picker:
   firebase_storage:
+  url_launcher:
 
 dev_dependencies:
   flutter_test:
