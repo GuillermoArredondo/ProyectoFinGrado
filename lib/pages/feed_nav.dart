@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:forumdroid/pages/post_detail.dart';
 import 'package:forumdroid/utils/firestore.dart';
 import 'package:forumdroid/utils/general.dart';
@@ -37,8 +38,25 @@ class _FeedState extends State<Feed> {
     return ListView(
       children: snapshot.data!.docs.map((document) {
         return Center(
-          child: Padding(
-              padding: const EdgeInsets.all(10), child: _bluidItem(document)),
+          child: Column(
+            children: [
+              Padding(
+                  padding: const EdgeInsets.all(10), child: _bluidItem(document)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 5, bottom: 10),
+                    child: Icon(FontAwesomeIcons.solidHeart, size: 15,),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 30, bottom: 10),
+                    child: Text(List.from(document['listVotos']).length.toString()),
+                  )
+                ],
+              )
+            ],
+          ),
         );
       }).toList(),
     );

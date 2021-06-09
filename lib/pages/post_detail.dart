@@ -1,7 +1,9 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:forumdroid/utils/firestore.dart';
+import 'package:forumdroid/utils/general.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PostDetail extends StatefulWidget {
@@ -15,6 +17,16 @@ class PostDetail extends StatefulWidget {
 }
 
 class _PostDetailState extends State<PostDetail> {
+
+  bool voted = false;
+  @override
+
+
+  void initState() {
+    _setVoteInit();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,6 +54,47 @@ class _PostDetailState extends State<PostDetail> {
                   border: Border.all(color: Colors.black, width: 1)),
                 child: _buildListLinks(),
               ),
+              Padding(padding: EdgeInsets.only(top: 20)),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(35, 0, 0, 0),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Color.fromRGBO(226, 247, 255, 1),
+                        minimumSize: Size(200, 50),
+                        padding: EdgeInsets.all(0),
+                        shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        side: BorderSide(color: Colors.black),
+                        )),
+                      onPressed: (){},
+                      child: Text('Comentarios', 
+                        style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                        ))
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(50, 0, 0, 0),
+                    child: InkWell(
+                      onTap: (){
+                        _vote();
+                      },
+                      child: Container(
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                          color: Color.fromRGBO(226, 247, 255, 1),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: Colors.black, width: 1)),
+                        child: _checkVoted(),
+                      ),
+                    ),
+                  )
+                ],
+              )
               //_buildListLinks()
             ],
           ),
@@ -267,6 +320,51 @@ class _PostDetailState extends State<PostDetail> {
           }
 
         },
+    );
+  }
+
+  _checkVoted(){
+    if (voted) {
+      voted = false;
+      return Icon(FontAwesomeIcons.solidHeart);
+      
+    } else {
+      voted = true;
+      return Icon(FontAwesomeIcons.heart);
+    }
+  }
+
+  _vote()async{
+    await getIdUserPrefs().then((value) async {
+      if (await searchVote(value, widget.document)) {
+        setState(() {
+          //voted = true;
+        });
+        quitarVoto(value, widget.document);
+      } else {
+        setState(() {
+          //voted = false;
+        });
+        ponerVoto(value, widget.document);
+      }
+    } 
+    );
+  }
+
+  _setVoteInit()async{
+    await getIdUserPrefs().then((value) async {
+      if (await searchVote(value, widget.document)) {
+        setState(() {
+          voted = true;
+        });
+        //quitarVoto(value, widget.document);
+      } else {
+        setState(() {
+          voted = false;
+        });
+        //ponerVoto(value, widget.document);
+      }
+    } 
     );
   }
 
