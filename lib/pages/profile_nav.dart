@@ -310,7 +310,12 @@ class _ProfileState extends State<Profile> {
                       child: InkWell(
                       child: Icon(FontAwesomeIcons.trashAlt),
                       onTap: (){
-
+                        alertOptions(
+                          context,
+                          'Eliminar',
+                          '¿Estás seguro que quieres eliminar esta publicación?',
+                          document.id
+                        );
                       },
                     )
                     ),

@@ -76,6 +76,16 @@ Future<int> getNumPosts() async {
 }
 
 
+//Elimina una publicacion
+deletePost(context, String idPost) async {
+  final firestore = FirebaseFirestore.instance;
+  print('a eliminar el doc ' + idPost);
+  await firestore.collection('posts').doc(idPost).delete().then((value) {
+    alert(context, 'Éxito', 'Publicación eliminada correctamente');
+  });
+}
+
+
 //Cambia la imagen del usuario
 changeImageUser(String idUser, File image) async {
   if (image != null) {
