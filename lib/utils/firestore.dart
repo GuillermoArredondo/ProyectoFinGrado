@@ -162,14 +162,72 @@ addNewPost(PostModel post) async {
   var votos = 0;
   var idUser = await getIdUserPrefs();
   var fecha = post.fecha;
+  List<String> listVotos = [];
   firestore.collection("posts").add({
     "id": '$id',
     "title": '$title',
     "content": '$content',
     "listEnlaces": FieldValue.arrayUnion(listEnlaces!),
     "listHastags": FieldValue.arrayUnion(listHastags!),
+    "listVotos": FieldValue.arrayUnion(listVotos),
     "votos": '$votos',
     "idUser": '$idUser',
     "fecha": '$fecha'
   });
+}
+
+//Buscar el id de un usuario en la lista de los votos de un post
+searchVote(String idUser, QueryDocumentSnapshot<Object?> document) async {
+  print(idUser);
+  final firestore = FirebaseFirestore.instance;
+  CollectionReference collectionReference = firestore.collection('posts');
+  QuerySnapshot<Object?> post =
+      await collectionReference.where('id', isEqualTo: document['id']).get();
+  List<String> votos = [];
+  for (var doc in post.docs) {
+    votos = List.from(doc['listVotos']);
+  }
+  if (votos.contains(idUser)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+//Pone un voto en una publicacion
+ponerVoto(String idUser, QueryDocumentSnapshot<Object?> document) {
+  final firestore = FirebaseFirestore.instance;
+  CollectionReference collectionReference = firestore.collection('posts');
+  List<String> lista = List.from(document['listVotos']);
+  var votos = lista.length;
+  votos = votos + 1;
+  List<String> newList = [];
+  newList.add(idUser);
+
+  collectionReference
+      .doc(document.id)
+      .update({'votos': votos, 'listVotos': FieldValue.arrayUnion(newList)})
+      .then((value) => {print('exito poniendo voto')})
+      .catchError((error) {
+        print('error poniendo voto');
+      });
+}
+
+//Quitar un voto de una publicación
+quitarVoto(String idUser, QueryDocumentSnapshot<Object?> document) {
+  final firestore = FirebaseFirestore.instance;
+  CollectionReference collectionReference = firestore.collection('posts');
+  List<String> lista = List.from(document['listVotos']);
+  var votos = lista.length;
+  votos = votos - 1;
+  List<String> newList = [];
+  newList.add(idUser);
+
+  collectionReference
+      .doc(document.id)
+      .update({'votos': votos, 'listVotos': FieldValue.arrayRemove(newList)})
+      .then((value) => {print('exito quitando voto')})
+      .catchError((error) {
+        print('error quitando voto');
+      });
 }
