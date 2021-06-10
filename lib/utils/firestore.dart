@@ -63,6 +63,19 @@ Future<String> getUserNameById(String idUser) async {
   return name;
 }
 
+//Obtiene el numero de post que ha hecho un usuario
+Future<int> getNumPosts() async {
+  String idUser = await getIdUserPrefs();
+  final firestore = FirebaseFirestore.instance;
+  CollectionReference collectionReference = firestore.collection('posts');
+  QuerySnapshot<Object?> users =
+      await collectionReference.where('idUser', isEqualTo: idUser).get();
+
+  int numPosts = users.docs.length;
+  return numPosts;
+}
+
+
 //Cambia la imagen del usuario
 changeImageUser(String idUser, File image) async {
   if (image != null) {
