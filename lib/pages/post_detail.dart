@@ -296,7 +296,7 @@ class _PostDetailState extends State<PostDetail> {
 
   _buildList(List<String> links){
     return Container(
-      height: links.length * 50.0,
+      height: _buildHeightListLinks(links),
       width: 360,
       child: ListView.builder(
             itemBuilder: (context, i){
@@ -305,6 +305,14 @@ class _PostDetailState extends State<PostDetail> {
             itemCount: links.length,
           ),
     );
+  }
+
+  _buildHeightListLinks(List<String> links){
+    if(links.length <= 1){
+      return 40.0;
+    }else{
+      return links.length * 50.0;
+    }
   }
 
 

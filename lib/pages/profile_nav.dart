@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:forumdroid/models/user_model.dart';
 import 'package:forumdroid/pages/post_detail.dart';
+import 'package:forumdroid/pages/post_nav.dart';
 import 'package:forumdroid/theme/app_theme.dart';
 import 'package:forumdroid/utils/firestore.dart';
 import 'package:forumdroid/utils/general.dart';
@@ -300,7 +301,8 @@ class _ProfileState extends State<Profile> {
                     child: InkWell(
                       child: Icon(FontAwesomeIcons.edit),
                       onTap: (){
-                        
+                        Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) => Post(true, document)));
                       },
                     )
                   ),

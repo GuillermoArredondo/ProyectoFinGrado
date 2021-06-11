@@ -20,6 +20,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> with TickerProviderStateMixin{
 
   TabController? controller;
+  //QueryDocumentSnapshot<Object?>? document;
 
   @override
   void initState() {
@@ -31,7 +32,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
   Widget build(BuildContext context) {
     return new Scaffold(
       body: new TabBarView(children: <Widget>[
-        new Feed(), new Search(), new Post(), new Profile()
+        new Feed(), new Search(), new Post(false), new Profile()
       ], controller: controller,),
       bottomNavigationBar: new Material(
         child: new TabBar(
