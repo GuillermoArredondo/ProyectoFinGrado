@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:forumdroid/models/post_model.dart';
 import 'package:forumdroid/models/user_model.dart';
+import 'package:forumdroid/pages/profile_nav.dart';
 import 'package:forumdroid/utils/auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'general.dart';
@@ -62,6 +63,29 @@ Future<String> getUserNameById(String idUser) async {
   }
   return name;
 }
+
+//Obtiene el numero de post que ha hecho un usuario
+Future<int> getNumPosts() async {
+  String idUser = await getIdUserPrefs();
+  final firestore = FirebaseFirestore.instance;
+  CollectionReference collectionReference = firestore.collection('posts');
+  QuerySnapshot<Object?> users =
+      await collectionReference.where('idUser', isEqualTo: idUser).get();
+
+  int numPosts = users.docs.length;
+  return numPosts;
+}
+
+
+//Elimina una publicacion
+deletePost(context, String idPost) async {
+  final firestore = FirebaseFirestore.instance;
+  print('a eliminar el doc ' + idPost);
+  await firestore.collection('posts').doc(idPost).delete().then((value) {
+    alert(context, 'Éxito', 'Publicación eliminada correctamente');
+  });
+}
+
 
 //Cambia la imagen del usuario
 changeImageUser(String idUser, File image) async {
@@ -174,6 +198,39 @@ addNewPost(PostModel post) async {
     "idUser": '$idUser',
     "fecha": '$fecha'
   });
+}
+
+//Edita una publicacion
+editPost(context, QueryDocumentSnapshot<Object?> document, PostModel post){
+  final firestore = FirebaseFirestore.instance;
+  CollectionReference collectionReference = firestore.collection('posts');
+  
+    collectionReference
+    .doc(document.id)
+        .update({
+          'listEnlaces': FieldValue.arrayRemove(List<String>.from(document['listEnlaces'])),
+          'listHastags': FieldValue.arrayRemove(List<String>.from(document['listHastags']))
+        })
+        .then((value) => {})
+        .catchError((error) => {alert(context, 'Error', error.toString())});
+    
+    collectionReference
+        .doc(document.id)
+        .update({
+          'title': post.titulo,
+          'content': post.contenido,
+          'fecha': post.fecha,
+          'listEnlaces': FieldValue.arrayUnion(post.enlaces!),
+          'listHastags': FieldValue.arrayUnion(post.hashtags!)
+        })
+        .then((value) => {
+              alert(
+                  context,
+                  'Éxito',
+                  'Los cambios se han guardado correctamente',
+                 () => {})
+            })
+        .catchError((error) => {alert(context, 'Error', error.toString())});
 }
 
 //Buscar el id de un usuario en la lista de los votos de un post

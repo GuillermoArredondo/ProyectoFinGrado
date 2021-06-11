@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:forumdroid/models/user_model.dart';
 import 'package:forumdroid/theme/app_theme.dart';
+import 'package:forumdroid/utils/firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
@@ -24,6 +25,46 @@ void alert(BuildContext context, String titulo, String msg, [onPressed]) {
                   onPressed();
                 },
                 child: new Text('OK'))
+          ],
+          elevation: 20,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        );
+      });
+}
+
+//Muestra una alerta con SI/NO
+void alertOptions(BuildContext context, String titulo, String msg, String idPost) {
+  showDialog(
+      context: context,
+      builder: (buildcontext) {
+        return AlertDialog(
+          title: Text(titulo),
+          content: Text(msg),
+          actions: [
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    primary: app_theme.primaryColor,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                    minimumSize: new Size(70, 40)),
+                onPressed: () {
+                  Navigator.pop(context);
+                  deletePost(context, idPost);
+                },
+                child: new Text('Sí')
+            ),
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    primary: app_theme.primaryColor,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                    minimumSize: new Size(70, 40)),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: new Text('No')
+            )
           ],
           elevation: 20,
           shape:

@@ -20,7 +20,7 @@ class _FeedState extends State<Feed> {
         centerTitle: true,
       ),
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('posts').snapshots(),
+        stream: FirebaseFirestore.instance.collection('posts').orderBy('fecha', descending: true).snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             return Center(
@@ -249,15 +249,15 @@ class _FeedState extends State<Feed> {
   }
 
   _textContent(QueryDocumentSnapshot<Object?> document) {
-    if (document['content'].toString().length > 151) {
+    if (document['content'].toString().length > 250) {
       return Text(
-        document['content'].toString().substring(0, 215) + '...',
+        document['content'].toString().substring(0, 250) + '...',
         style: _buildTextStyle(14.0, false),
       );
     } else {
       return Text(
         document['content'],
-        style: _buildTextStyle(15.0, false),
+        style: _buildTextStyle(14.0, false),
       );
     }
   }

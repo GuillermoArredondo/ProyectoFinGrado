@@ -296,7 +296,7 @@ class _PostDetailState extends State<PostDetail> {
 
   _buildList(List<String> links){
     return Container(
-      height: links.length * 50.0,
+      height: _buildHeightListLinks(links),
       width: 360,
       child: ListView.builder(
             itemBuilder: (context, i){
@@ -305,6 +305,14 @@ class _PostDetailState extends State<PostDetail> {
             itemCount: links.length,
           ),
     );
+  }
+
+  _buildHeightListLinks(List<String> links){
+    if(links.length <= 1){
+      return 40.0;
+    }else{
+      return links.length * 50.0;
+    }
   }
 
 
@@ -377,8 +385,11 @@ class _PostDetailState extends State<PostDetail> {
   }
 
   _buildHeight(QueryDocumentSnapshot<Object?> document){
-    if(document['content'].toString().length < 100){
+    var doc = document['content'].toString().length;
+    if(doc < 100){
       return 205.0;
+    }else if(doc > 100 && doc < 300 ){
+      return document['content'].toString().length * 1.15;
     }else{
       return document['content'].toString().length * 0.75;
     }
