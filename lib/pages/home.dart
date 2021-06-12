@@ -32,7 +32,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
   Widget build(BuildContext context) {
     return new Scaffold(
       body: new TabBarView(children: <Widget>[
-        new Feed(), new Search(), new Post(false), new Profile()
+        new Feed(), new Search(), new Post(false), new Profile(false)
       ], controller: controller,),
       bottomNavigationBar: new Material(
         child: new TabBar(

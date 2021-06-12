@@ -1,35 +1,25 @@
-import 'dart:io';
+
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:forumdroid/models/user_model.dart';
-import 'package:forumdroid/pages/edit_profile.dart';
-import 'package:forumdroid/theme/app_theme.dart';
-import 'package:forumdroid/utils/auth.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:forumdroid/utils/general.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
-class MyProfile extends StatefulWidget {
+
+class GenerateQR extends StatefulWidget {
   @override
-  _MyProfileState createState() => _MyProfileState();
+  _GenerateQRState createState() => _GenerateQRState();
 }
 
-class _MyProfileState extends State<MyProfile> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void setState(VoidCallback fn) {
-    super.setState(fn);
-  }
+class _GenerateQRState extends State<GenerateQR> {
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Ajustes de Perfil'),
+        title: Text('Generar QR'),
         centerTitle: true,
       ),
       body: Container(
@@ -42,31 +32,15 @@ class _MyProfileState extends State<MyProfile> {
               _buildName(),
               Padding(padding: EdgeInsets.only(top: 10)),
               _buildEmail(),
-              Padding(padding: EdgeInsets.only(top: 70)),
-              _buildButton('Editar Perfil', () => _buildRoute()),
-              Padding(padding: EdgeInsets.only(top: 20)),
-              _buildButton('Generar QR',
-                  () => Navigator.of(context).pushReplacementNamed('generate_qr')),
-              Padding(padding: EdgeInsets.only(top: 20)),
-              _buildButton('Seguidores',
-                  () => Navigator.of(context).pushReplacementNamed('home')),
-              Padding(padding: EdgeInsets.only(top: 20)),
-              _buildButton('Seguidos',
-                  () => Navigator.of(context).pushReplacementNamed('home')),
-              Padding(padding: EdgeInsets.only(top: 20)),
-              _buildButton('Cerrar sesión', () => logOut(context)),
+              Padding(padding: EdgeInsets.only(top: 30)),
+              _buildQR(),
+              Padding(padding: EdgeInsets.only(top: 30)),
+              //_buildShare()
             ],
           ),
         ),
       ),
     );
-  }
-
-  _buildRoute() {
-    getUserfromSharePrefs().then((value) {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => EditProfile(value)));
-    });
   }
 
   _imageUser() {
@@ -139,16 +113,38 @@ class _MyProfileState extends State<MyProfile> {
     );
   }
 
-  _buildButton(String tittle, [onPressed]) {
-    return ElevatedButton(
-        onPressed: onPressed,
-        child: new Text(
-          '$tittle',
-          style: TextStyle(
-            fontSize: 18,
-            color: Colors.black,
-          ),
+  _buildQR() {
+    return FutureBuilder<String>(
+      future: getIdUserPrefs(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Container(
+            height: 300,
+            width: 300,
+            child: QrImage(
+              data: snapshot.data!,
+            ),
+          );
+        }
+        return CircularProgressIndicator();
+      },
+    );
+  }
+
+  _buildShare() {
+    return ElevatedButton.icon(
+        label: Text('Compartir',
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.black,
+            )),
+        icon: Icon(
+          FontAwesomeIcons.shareAlt,
+          color: Colors.black,
         ),
+        onPressed: () {
+          screenShotAndShare();
+        },
         style: ElevatedButton.styleFrom(
             primary: Color.fromRGBO(226, 247, 255, 1),
             minimumSize: Size(270, 50),
@@ -159,11 +155,5 @@ class _MyProfileState extends State<MyProfile> {
             )));
   }
 
-  // _loadUserData() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   txtUserName = prefs.getString('name') ?? 'User Name';
-  //   txtIcon = txtUserName.substring(0, 1);
-  //   txtEmail = prefs.getString('email') ?? 'email';
-  //   //print(txtIcon);
-  // }
+  screenShotAndShare() async {}
 }

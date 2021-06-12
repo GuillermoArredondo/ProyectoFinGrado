@@ -40,6 +40,9 @@ dependencies:
   image_picker:
   firebase_storage:
   url_launcher:
+  qr_flutter: ^4.0.0
+  permission_handler:
+  flutter_barcode_scanner: ^2.0.0
 
 dev_dependencies:
   flutter_test:

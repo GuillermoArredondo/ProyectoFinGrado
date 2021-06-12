@@ -64,9 +64,21 @@ Future<String> getUserNameById(String idUser) async {
   return name;
 }
 
-//Obtiene el numero de post que ha hecho un usuario
+//Obtiene el numero de post que ha hecho un usuario logged
 Future<int> getNumPosts() async {
   String idUser = await getIdUserPrefs();
+  final firestore = FirebaseFirestore.instance;
+  CollectionReference collectionReference = firestore.collection('posts');
+  QuerySnapshot<Object?> users =
+      await collectionReference.where('idUser', isEqualTo: idUser).get();
+
+  int numPosts = users.docs.length;
+  return numPosts;
+}
+
+
+//Obtiene el numero de post que ha hecho un usuario
+Future<int> getNumPostsUser(String idUser) async {
   final firestore = FirebaseFirestore.instance;
   CollectionReference collectionReference = firestore.collection('posts');
   QuerySnapshot<Object?> users =
@@ -105,7 +117,7 @@ changeImageUser(String idUser, File image) async {
 
 //Get Usuario por email de Firestore
 //Este método tambien es llamado cuando se intenta logear con una red social,
-//Y el usuario no esta regiustrado en firestore, de esta manera se registrará
+//Y el usuario no esta registrado en firestore, de esta manera se registrará
 getUserByEmail(
     context, FirebaseFirestore firestore, UserModel user, bool media) async {
   CollectionReference collectionReference = firestore.collection('users');
@@ -134,6 +146,25 @@ getUserByEmail(
     print('getUserByEmail');
     saveUserSharedPrefs(list[0]);
   }
+}
+
+//Obtiene el usuario entero por email
+Future<dynamic> getUserProfile(String idUser)async{
+  final firestore = FirebaseFirestore.instance;
+  CollectionReference collectionReference = firestore.collection('users');
+  QuerySnapshot<Object?> users =
+      await collectionReference.where('id', isEqualTo: idUser).get();
+
+    UserModel user = new UserModel();
+    for (var doc in users.docs) {
+      user.idUser = doc['id'];
+      user.id = doc.id;
+      user.email = doc['email'];
+      user.name = doc['name'];
+      user.password = doc['password'];
+      user.imgUrl = doc['imgUrl'];
+    }
+    return user;
 }
 
 //Edita un usuario de firestore
