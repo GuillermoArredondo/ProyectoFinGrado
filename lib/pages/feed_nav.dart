@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:forumdroid/pages/post_detail.dart';
+import 'package:forumdroid/pages/profile_nav.dart';
 import 'package:forumdroid/utils/firestore.dart';
 import 'package:forumdroid/utils/general.dart';
 
@@ -98,66 +99,74 @@ class _FeedState extends State<Feed> {
   _buildRow1(QueryDocumentSnapshot<Object?> document) {
     return Row(
       children: [
-        Container(
-          width: 180,
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                    child: FutureBuilder<String>(
-                      future: getUserImage(document['idUser']),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return Container(
-                              width: 45,
-                              height: 45,
-                              decoration: new BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: new DecorationImage(
-                                      fit: BoxFit.fill,
-                                      image:
-                                          new NetworkImage(snapshot.data!))));
-                        }
-                        return CircleAvatar(
-                          child: FutureBuilder<String>(
-                            future: getUserNameById(document['idUser']),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                return Text(
-                                  snapshot.data!.substring(0, 1),
-                                  style: TextStyle(fontSize: 20),
-                                );
-                              }
-                              return CircularProgressIndicator();
-                            },
-                          ),
-                          radius: 22,
-                        );
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: Container(
+        InkWell(
+          onTap: (){
+            getUserProfile(document['idUser']).then((value) {
+              Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) => Profile(true, value)));
+            });
+          },
+          child: Container(
+            width: 180,
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                       child: FutureBuilder<String>(
-                        future: getUserNameById(document['idUser']),
+                        future: getUserImage(document['idUser']),
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
-                            return Text(
-                              snapshot.data!,
-                              style: _buildTextStyle(17.0, true),
-                            );
+                            return Container(
+                                width: 45,
+                                height: 45,
+                                decoration: new BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: new DecorationImage(
+                                        fit: BoxFit.fill,
+                                        image:
+                                            new NetworkImage(snapshot.data!))));
                           }
-                          return CircularProgressIndicator();
+                          return CircleAvatar(
+                            child: FutureBuilder<String>(
+                              future: getUserNameById(document['idUser']),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  return Text(
+                                    snapshot.data!.substring(0, 1),
+                                    style: TextStyle(fontSize: 20),
+                                  );
+                                }
+                                return CircularProgressIndicator();
+                              },
+                            ),
+                            radius: 22,
+                          );
                         },
                       ),
                     ),
-                  )
-                ],
-              ),
-            ],
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Container(
+                        child: FutureBuilder<String>(
+                          future: getUserNameById(document['idUser']),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return Text(
+                                snapshot.data!,
+                                style: _buildTextStyle(17.0, true),
+                              );
+                            }
+                            return CircularProgressIndicator();
+                          },
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
         Container(
