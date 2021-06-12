@@ -43,6 +43,7 @@ dependencies:
   qr_flutter: ^4.0.0
   permission_handler:
   flutter_barcode_scanner: ^2.0.0
+  encrypt:
 
 dev_dependencies:
   flutter_test:

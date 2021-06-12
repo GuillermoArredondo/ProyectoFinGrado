@@ -4,6 +4,16 @@ import 'package:forumdroid/theme/app_theme.dart';
 import 'package:forumdroid/utils/firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
+import 'package:encrypt/encrypt.dart' as Encrypt;
+
+//Cifrar String
+String cifrarPass(String text) {
+  final key = Encrypt.Key.fromLength(32);
+  final iv = Encrypt.IV.fromLength(16);
+  final encrypter = Encrypt.Encrypter(Encrypt.AES(key));
+  final encrypted = encrypter.encrypt(text, iv: iv);
+  return encrypted.base64;
+}
 
 //Muestra una alerta con su mensaje
 void alert(BuildContext context, String titulo, String msg, [onPressed]) {
@@ -34,7 +44,8 @@ void alert(BuildContext context, String titulo, String msg, [onPressed]) {
 }
 
 //Muestra una alerta con SI/NO
-void alertOptions(BuildContext context, String titulo, String msg, String idPost) {
+void alertOptions(
+    BuildContext context, String titulo, String msg, String idPost) {
   showDialog(
       context: context,
       builder: (buildcontext) {
@@ -52,8 +63,7 @@ void alertOptions(BuildContext context, String titulo, String msg, String idPost
                   Navigator.pop(context);
                   deletePost(context, idPost);
                 },
-                child: new Text('Sí')
-            ),
+                child: new Text('Sí')),
             ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     primary: app_theme.primaryColor,
@@ -63,8 +73,7 @@ void alertOptions(BuildContext context, String titulo, String msg, String idPost
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: new Text('No')
-            )
+                child: new Text('No'))
           ],
           elevation: 20,
           shape:

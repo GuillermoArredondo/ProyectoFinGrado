@@ -21,7 +21,10 @@ class _FeedState extends State<Feed> {
         centerTitle: true,
       ),
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('posts').orderBy('fecha', descending: true).snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection('posts')
+            .orderBy('fecha', descending: true)
+            .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             return Center(
@@ -42,17 +45,22 @@ class _FeedState extends State<Feed> {
           child: Column(
             children: [
               Padding(
-                  padding: const EdgeInsets.all(10), child: _bluidItem(document)),
+                  padding: const EdgeInsets.all(10),
+                  child: _bluidItem(document)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(right: 5, bottom: 10),
-                    child: Icon(FontAwesomeIcons.solidHeart, size: 15,),
+                    child: Icon(
+                      FontAwesomeIcons.solidHeart,
+                      size: 15,
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(right: 30, bottom: 10),
-                    child: Text(List.from(document['listVotos']).length.toString()),
+                    child: Text(
+                        List.from(document['listVotos']).length.toString()),
                   )
                 ],
               )
@@ -66,8 +74,8 @@ class _FeedState extends State<Feed> {
   _bluidItem(QueryDocumentSnapshot<Object?> document) {
     return InkWell(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => PostDetail(document)));
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => PostDetail(document)));
       },
       child: Container(
           width: 360,
@@ -77,9 +85,18 @@ class _FeedState extends State<Feed> {
             child: _buildContainer(document),
           ),
           decoration: BoxDecoration(
-              color: Color.fromRGBO(226, 247, 255, 1),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.black, width: 1))),
+            color: Color.fromRGBO(226, 247, 255, 1),
+            borderRadius: BorderRadius.circular(15),
+            //border: Border.all(color: Colors.black, width: 1),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: Offset(0, 3),
+              ),
+            ],
+          )),
     );
   }
 
@@ -100,10 +117,10 @@ class _FeedState extends State<Feed> {
     return Row(
       children: [
         InkWell(
-          onTap: (){
+          onTap: () {
             getUserProfile(document['idUser']).then((value) {
-              Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) => Profile(true, value)));
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => Profile(true, value)));
             });
           },
           child: Container(
@@ -252,9 +269,18 @@ class _FeedState extends State<Feed> {
           ),
         ),
         decoration: BoxDecoration(
-            color: Color.fromRGBO(226, 236, 255 , 1),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.black, width: 1)));
+          color: Color.fromRGBO(226, 236, 255, 1),
+          borderRadius: BorderRadius.circular(20),
+          //border: Border.all(color: Colors.black, width: 1)
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 7,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ));
   }
 
   _textContent(QueryDocumentSnapshot<Object?> document) {

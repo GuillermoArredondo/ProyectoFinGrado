@@ -51,7 +51,15 @@ class _ProfileState extends State<Profile> {
                 decoration: BoxDecoration(
                     color: Color.fromRGBO(226, 247, 255, 1),
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.black, width: 1)),
+                    //border: Border.all(color: Colors.black, width: 1)
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: Offset(0, 3),
+                      ),
+                    ]),
                 child: Column(
                   children: [_buildRowF(), _buildRowS()],
                 ),
@@ -155,111 +163,108 @@ class _ProfileState extends State<Profile> {
     return Text(
       widget.user!.name!,
       style: _thisTextStyle(),
-    );   
+    );
   }
 
   _buildRowS() {
     if (widget.notMyProfile!) {
       return Row(
-      children: [
-        Container(
-          padding: EdgeInsets.fromLTRB(15, 20, 0, 10),
-          child: FutureBuilder<int>(
-            future: getNumPostsUser(widget.user!.idUser!),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Text(snapshot.data.toString() + ' Posts',
-                    style: TextStyle(fontSize: 15));
-              }
-              return CircularProgressIndicator();
-            },
+        children: [
+          Container(
+            padding: EdgeInsets.fromLTRB(15, 20, 0, 10),
+            child: FutureBuilder<int>(
+              future: getNumPostsUser(widget.user!.idUser!),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Text(snapshot.data.toString() + ' Posts',
+                      style: TextStyle(fontSize: 15));
+                }
+                return CircularProgressIndicator();
+              },
+            ),
           ),
-        ),
-        Container(
-          padding: EdgeInsets.fromLTRB(200, 20, 0, 10),
-          child: Text(
-            '0 Seguidores',
-            style: TextStyle(fontSize: 15),
+          Container(
+            padding: EdgeInsets.fromLTRB(200, 20, 0, 10),
+            child: Text(
+              '0 Seguidores',
+              style: TextStyle(fontSize: 15),
+            ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
     } else {
       return Row(
-      children: [
-        Container(
-          padding: EdgeInsets.fromLTRB(15, 20, 0, 10),
-          child: FutureBuilder<int>(
-            future: getNumPosts(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Text(snapshot.data.toString() + ' Posts',
-                    style: TextStyle(fontSize: 15));
-              }
-              return CircularProgressIndicator();
-            },
+        children: [
+          Container(
+            padding: EdgeInsets.fromLTRB(15, 20, 0, 10),
+            child: FutureBuilder<int>(
+              future: getNumPosts(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Text(snapshot.data.toString() + ' Posts',
+                      style: TextStyle(fontSize: 15));
+                }
+                return CircularProgressIndicator();
+              },
+            ),
           ),
-        ),
-        Container(
-          padding: EdgeInsets.fromLTRB(200, 20, 0, 10),
-          child: Text(
-            '0 Seguidores',
-            style: TextStyle(fontSize: 15),
+          Container(
+            padding: EdgeInsets.fromLTRB(200, 20, 0, 10),
+            child: Text(
+              '0 Seguidores',
+              style: TextStyle(fontSize: 15),
+            ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
     }
   }
 
   _buildList() {
-    if(widget.notMyProfile!){
-          return StreamBuilder(
-            stream: FirebaseFirestore.instance
-                .collection('posts')
-                .where('idUser', isEqualTo: widget.user!.idUser)
-                .orderBy('fecha', descending: true)
-                .snapshots(),
-            builder:
-                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (!snapshot.hasData) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else {
-                return _buildListview(snapshot);
-              }
-            },
-          );
-        
+    if (widget.notMyProfile!) {
+      return StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection('posts')
+            .where('idUser', isEqualTo: widget.user!.idUser)
+            .orderBy('fecha', descending: true)
+            .snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            return _buildListview(snapshot);
+          }
+        },
+      );
     } else {
       return FutureBuilder<String>(
-      future: getIdUserPrefs(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return StreamBuilder(
-            stream: FirebaseFirestore.instance
-                .collection('posts')
-                .where('idUser', isEqualTo: snapshot.data)
-                .orderBy('fecha', descending: true)
-                .snapshots(),
-            builder:
-                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (!snapshot.hasData) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else {
-                return _buildListview(snapshot);
-              }
-            },
-          );
-        }
-        return CircularProgressIndicator();
-      },
-    );
+        future: getIdUserPrefs(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection('posts')
+                  .where('idUser', isEqualTo: snapshot.data)
+                  .orderBy('fecha', descending: true)
+                  .snapshots(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else {
+                  return _buildListview(snapshot);
+                }
+              },
+            );
+          }
+          return CircularProgressIndicator();
+        },
+      );
     }
-    
   }
 
   _buildListview(AsyncSnapshot<QuerySnapshot<Object?>> snapshot) {
@@ -300,10 +305,10 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  _heightList(){
-    if(widget.notMyProfile!){
+  _heightList() {
+    if (widget.notMyProfile!) {
       return 620.0;
-    }else{
+    } else {
       return 584.0;
     }
   }
@@ -324,7 +329,17 @@ class _ProfileState extends State<Profile> {
           decoration: BoxDecoration(
               color: Color.fromRGBO(226, 247, 255, 1),
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.black, width: 1))),
+              //border: Border.all(color: Colors.black, width: 1),
+              boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 7,
+              offset: Offset(0, 3),
+            ),
+            ]
+          )
+      ),
     );
   }
 
@@ -344,94 +359,93 @@ class _ProfileState extends State<Profile> {
   _buildRow1(QueryDocumentSnapshot<Object?> document) {
     if (widget.notMyProfile!) {
       return Row(
-      children: [
-        Container(
-          //width: 20,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 0),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 77,
-                      //alignment: Alignment.topRight,
-                      child: Text(
-                        document['fecha'],
-                        style: _buildTextStyle(15.0, false),
-                      ),
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-    } else {
-      return Row(
-      children: [
-        Container(
-          //width: 20,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 0),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 77,
-                      //alignment: Alignment.topRight,
-                      child: Text(
-                        document['fecha'],
-                        style: _buildTextStyle(15.0, false),
-                      ),
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
-        ),
-        Container(
-          width: 250,
-          child: Column(
-            children: [
-              Row(
+        children: [
+          Container(
+            //width: 20,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 0),
+              child: Column(
                 children: [
-                  Container(
-                      padding: EdgeInsets.fromLTRB(190, 0, 0, 0),
-                      child: InkWell(
-                        child: Icon(FontAwesomeIcons.edit),
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => Post(true, document)));
-                        },
-                      )),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: Container(
-                        child: InkWell(
-                      child: Icon(FontAwesomeIcons.trashAlt),
-                      onTap: () {
-                        alertOptions(
-                            context,
-                            'Eliminar',
-                            '¿Estás seguro que quieres eliminar esta publicación?',
-                            document.id);
-                      },
-                    )),
+                  Row(
+                    children: [
+                      Container(
+                        width: 77,
+                        //alignment: Alignment.topRight,
+                        child: Text(
+                          document['fecha'],
+                          style: _buildTextStyle(15.0, false),
+                        ),
+                      ),
+                    ],
                   )
                 ],
               ),
-            ],
+            ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    } else {
+      return Row(
+        children: [
+          Container(
+            //width: 20,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 0),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: 77,
+                        //alignment: Alignment.topRight,
+                        child: Text(
+                          document['fecha'],
+                          style: _buildTextStyle(15.0, false),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+          Container(
+            width: 250,
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Container(
+                        padding: EdgeInsets.fromLTRB(190, 0, 0, 0),
+                        child: InkWell(
+                          child: Icon(FontAwesomeIcons.edit),
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => Post(true, document)));
+                          },
+                        )),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Container(
+                          child: InkWell(
+                        child: Icon(FontAwesomeIcons.trashAlt),
+                        onTap: () {
+                          alertOptions(
+                              context,
+                              'Eliminar',
+                              '¿Estás seguro que quieres eliminar esta publicación?',
+                              document.id);
+                        },
+                      )),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      );
     }
-    
   }
 
   _buildRow2(QueryDocumentSnapshot<Object?> document) {
@@ -493,7 +507,17 @@ class _ProfileState extends State<Profile> {
         decoration: BoxDecoration(
             color: Color.fromRGBO(226, 236, 255, 1),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.black, width: 1)));
+            //border: Border.all(color: Colors.black, width: 1),
+            boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 7,
+              offset: Offset(0, 3),
+            ),
+            ]
+        )
+    );
   }
 
   _textContent(QueryDocumentSnapshot<Object?> document) {

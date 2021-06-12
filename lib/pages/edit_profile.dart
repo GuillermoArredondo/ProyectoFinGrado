@@ -326,59 +326,22 @@ class _EditProfileState extends State<EditProfile> {
                       });
                 
               } else {
-                user.imgUrl = userTest.imgUrl;
+                if(userTest.imgUrl != 'null'){
+                  user.imgUrl = userTest.imgUrl;
+                }else{
+                  user.imgUrl = 'null';
+                }
                 user.id = userTest.id;
                 user.idUser = userTest.idUser;
                 user.media = false;
-                user.imgUrl = 'null';
                 editUser(context, user);
               }
             } else {
               alert(context, 'Error',
                   'No puedes editar tu perfil si has accedido con una red social');
             }
-
-            //getIdUserPrefs().then((value) => uploadImgToFireStore(value, imagen!));
-            //await prefs.getBool('media').then((value) => print(value));
-            //bool media = false;
-            //media = await  prefs.getBool('media')!;
-            //getMediaPrefs().then((value) => _edit(value));
-            // if (!media) {
-            //   if (imagen != null) {
-            //     print('Estoy en no media y si foto');
-            //     getIdUserPrefs()
-            //         .then((value) => uploadImgToFireStore(value, imagen!));
-            //     editUser(context, user);
-            //     hidealertLoading(context);
-            //   } else {
-            //     editUser(context, user);
-            //   }
-            // } else {
-            //   alert(context, 'Error',
-            //       'No puedes editar tu perfil si has accedido con una red social');
-            // }
-            print(userTest.idUser);
           }),
     );
-  }
-
-  _edit(value) {
-    if (!value) {
-      if (imagen != null) {
-        getIdUserPrefs().then((value) => uploadImgToFireStore(value, imagen!));
-        editUser(context, user);
-      } else {
-        editUser(context, user);
-      }
-    } else {
-      alert(context, 'Error',
-          'No puedes editar tu perfil si has accedido con una red social');
-    }
-  }
-
-  _setId(value) {
-    idUser = value;
-    //print(idUser);
   }
 
   seleccionarImagen(context) {

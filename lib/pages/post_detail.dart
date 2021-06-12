@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -7,7 +6,6 @@ import 'package:forumdroid/utils/general.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PostDetail extends StatefulWidget {
-
   QueryDocumentSnapshot<Object?> document;
 
   PostDetail(this.document);
@@ -17,11 +15,8 @@ class PostDetail extends StatefulWidget {
 }
 
 class _PostDetailState extends State<PostDetail> {
-
   bool voted = false;
   @override
-
-
   void initState() {
     _setVoteInit();
     super.initState();
@@ -34,76 +29,99 @@ class _PostDetailState extends State<PostDetail> {
         title: Text(''),
         centerTitle: true,
       ),
-      body: 
-         Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Color.fromRGBO(226, 247, 255, 1),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.black, width: 1)),
-                child: _buildContainer(),
-              ),
-              Padding(padding: EdgeInsets.only(top: 10)),
-              Container(
-                decoration: BoxDecoration(
-                  color: Color.fromRGBO(226, 247, 255, 1),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.black, width: 1)),
-                child: _buildListLinks(),
-              ),
-              Padding(padding: EdgeInsets.only(top: 20)),
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(35, 0, 0, 0),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: Color.fromRGBO(226, 247, 255, 1),
-                        minimumSize: Size(200, 50),
-                        padding: EdgeInsets.all(0),
-                        shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        side: BorderSide(color: Colors.black),
-                        )),
-                      onPressed: (){},
-                      child: Text('Comentarios', 
-                        style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black,
-                        ))
-                    ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: Color.fromRGBO(226, 247, 255, 1),
+                borderRadius: BorderRadius.circular(20),
+                //border: Border.all(color: Colors.black, width: 1),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: Offset(0, 3),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(50, 0, 0, 0),
-                    child: InkWell(
-                      onTap: (){
-                        _vote();
-                      },
-                      child: Container(
-                        height: 50,
-                        width: 50,
-                        decoration: BoxDecoration(
+                ],
+              ),
+              child: _buildContainer(),
+            ),
+            Padding(padding: EdgeInsets.only(top: 10)),
+            Container(
+              decoration: BoxDecoration(
+                color: Color.fromRGBO(226, 247, 255, 1),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+              ),
+              //border: Border.all(color: Colors.black, width: 1)),
+              child: _buildListLinks(),
+            ),
+            Padding(padding: EdgeInsets.only(top: 20)),
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(35, 0, 0, 0),
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          primary: Color.fromRGBO(226, 247, 255, 1),
+                          minimumSize: Size(200, 50),
+                          padding: EdgeInsets.all(0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            //side: BorderSide(color: Colors.black),
+                          )),
+                      onPressed: () {},
+                      child: Text('Comentarios',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.black,
+                          ))),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(50, 0, 0, 0),
+                  child: InkWell(
+                    onTap: () {
+                      _vote();
+                    },
+                    child: Container(
+                      height: 50,
+                      width: 50,
+                      decoration: BoxDecoration(
                           color: Color.fromRGBO(226, 247, 255, 1),
                           borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: Colors.black, width: 1)),
-                        child: _checkVoted(),
-                      ),
+                          //border: Border.all(color: Colors.black, width: 1)
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 2,
+                              blurRadius: 2,
+                              offset: Offset(0, 3),
+                            ),
+                          ]),
+                      child: _checkVoted(),
                     ),
-                  )
-                ],
-              )
-              //_buildListLinks()
-            ],
-          ),
+                  ),
+                )
+              ],
+            )
+            //_buildListLinks()
+          ],
         ),
-      
+      ),
     );
   }
 
-  _buildContainer(){
+  _buildContainer() {
     return Padding(
       padding: const EdgeInsets.only(left: 10, top: 10),
       child: Container(
@@ -268,81 +286,89 @@ class _PostDetailState extends State<PostDetail> {
           ),
         ),
         decoration: BoxDecoration(
-            color: Color.fromRGBO(226, 236, 255 , 1),
+            color: Color.fromRGBO(226, 236, 255, 1),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.black, width: 1)));
+            //border: Border.all(color: Colors.black, width: 1)
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 2,
+                blurRadius: 7,
+                offset: Offset(0, 3),
+              ),
+            ]));
   }
 
-
-  _buildListLinks(){
+  _buildListLinks() {
     List<String> links = List.from(widget.document['listEnlaces']);
     return Container(
-      width: 500,
-      height: links.length * 79,
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: Text('Enlaces:', style: _buildTextStyle(16.0, true),)
+        width: 500,
+        height: links.length * 79,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    'Enlaces:',
+                    style: _buildTextStyle(16.0, true),
+                  )),
             ),
-          ),
-          _buildList(links)
-        ],
-      )
-    );
+            _buildList(links)
+          ],
+        ));
   }
 
-  _buildList(List<String> links){
+  _buildList(List<String> links) {
     return Container(
       height: _buildHeightListLinks(links),
       width: 360,
       child: ListView.builder(
-            itemBuilder: (context, i){
-              return _buildRowLink(links[i]);
-            },
-            itemCount: links.length,
-          ),
+        itemBuilder: (context, i) {
+          return _buildRowLink(links[i]);
+        },
+        itemCount: links.length,
+      ),
     );
   }
 
-  _buildHeightListLinks(List<String> links){
-    if(links.length <= 1){
+  _buildHeightListLinks(List<String> links) {
+    if (links.length <= 1) {
       return 40.0;
-    }else{
+    } else {
       return links.length * 50.0;
     }
   }
 
-
-  _buildRowLink(String link){
+  _buildRowLink(String link) {
     return ListTile(
-        title: Text(link, style: TextStyle(color: Colors.blue),),
-        //trailing: new Icon(FontAwesomeIcons.trash),
-        onTap: () async {
-          if(await canLaunch('https://'+link)){
-            await launch('https://'+link);
-          }else{
-            print('NO');
-          }
-
-        },
+      title: Text(
+        link,
+        style: TextStyle(color: Colors.blue),
+      ),
+      //trailing: new Icon(FontAwesomeIcons.trash),
+      onTap: () async {
+        if (await canLaunch('https://' + link)) {
+          await launch('https://' + link);
+        } else {
+          print('NO');
+        }
+      },
     );
   }
 
-  _checkVoted(){
+  _checkVoted() {
     if (voted) {
       voted = false;
       return Icon(FontAwesomeIcons.solidHeart);
-      
     } else {
       voted = true;
       return Icon(FontAwesomeIcons.heart);
     }
   }
 
-  _vote()async{
+  _vote() async {
     await getIdUserPrefs().then((value) async {
       if (await searchVote(value, widget.document)) {
         setState(() {
@@ -355,11 +381,10 @@ class _PostDetailState extends State<PostDetail> {
         });
         ponerVoto(value, widget.document);
       }
-    } 
-    );
+    });
   }
 
-  _setVoteInit()async{
+  _setVoteInit() async {
     await getIdUserPrefs().then((value) async {
       if (await searchVote(value, widget.document)) {
         setState(() {
@@ -372,25 +397,23 @@ class _PostDetailState extends State<PostDetail> {
         });
         //ponerVoto(value, widget.document);
       }
-    } 
+    });
+  }
+
+  _textContent(QueryDocumentSnapshot<Object?> document) {
+    return Text(
+      document['content'],
+      style: _buildTextStyle(15.0, false),
     );
   }
 
-
-  _textContent(QueryDocumentSnapshot<Object?> document) {
-      return Text(
-        document['content'],
-        style: _buildTextStyle(15.0, false),
-      ); 
-  }
-
-  _buildHeight(QueryDocumentSnapshot<Object?> document){
+  _buildHeight(QueryDocumentSnapshot<Object?> document) {
     var doc = document['content'].toString().length;
-    if(doc < 100){
+    if (doc < 100) {
       return 205.0;
-    }else if(doc > 100 && doc < 300 ){
+    } else if (doc > 100 && doc < 300) {
       return document['content'].toString().length * 1.15;
-    }else{
+    } else {
       return document['content'].toString().length * 0.75;
     }
   }

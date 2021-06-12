@@ -1,13 +1,9 @@
-import 'dart:io';
-import 'dart:ui';
 
+import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:forumdroid/models/user_model.dart';
 import 'package:forumdroid/pages/edit_profile.dart';
-import 'package:forumdroid/theme/app_theme.dart';
 import 'package:forumdroid/utils/auth.dart';
 import 'package:forumdroid/utils/general.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class MyProfile extends StatefulWidget {
   @override
@@ -49,10 +45,10 @@ class _MyProfileState extends State<MyProfile> {
                   () => Navigator.of(context).pushReplacementNamed('generate_qr')),
               Padding(padding: EdgeInsets.only(top: 20)),
               _buildButton('Seguidores',
-                  () => Navigator.of(context).pushReplacementNamed('home')),
+                  () {}),
               Padding(padding: EdgeInsets.only(top: 20)),
               _buildButton('Seguidos',
-                  () => Navigator.of(context).pushReplacementNamed('home')),
+                  () {}),
               Padding(padding: EdgeInsets.only(top: 20)),
               _buildButton('Cerrar sesión', () => logOut(context)),
             ],
@@ -155,15 +151,10 @@ class _MyProfileState extends State<MyProfile> {
             padding: EdgeInsets.all(0),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),
-              side: BorderSide(color: Colors.black),
-            )));
+              //side: BorderSide(color: Colors.black),
+            )
+        )
+    );
   }
 
-  // _loadUserData() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   txtUserName = prefs.getString('name') ?? 'User Name';
-  //   txtIcon = txtUserName.substring(0, 1);
-  //   txtEmail = prefs.getString('email') ?? 'email';
-  //   //print(txtIcon);
-  // }
 }

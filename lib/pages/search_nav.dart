@@ -58,7 +58,7 @@ class _SearchState extends State<Search> {
             padding: EdgeInsets.all(0),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),
-              side: BorderSide(color: Colors.black),
+              //side: BorderSide(color: Colors.black),
             )));
   }
 

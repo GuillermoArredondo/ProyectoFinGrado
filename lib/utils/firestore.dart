@@ -9,13 +9,14 @@ import 'package:forumdroid/utils/auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'general.dart';
 
+
 //añadir nuevo usuario a Firestore
 void addNewUser(FirebaseFirestore firestore, UserModel user) {
   print('addNewUser');
   var id = user.id;
   var name = user.name;
   var email = user.email;
-  var password = user.password;
+  var password = cifrarPass(user.password!);
   var imgUrl = user.imgUrl;
   firestore.collection("users").add({
     "id": '$id',
@@ -187,7 +188,7 @@ editUserFireStore(context, FirebaseFirestore firestore, UserModel user) async {
                   context,
                   'Éxito',
                   'Los cambios se han guardado correctamente',
-                  () => Navigator.of(context).pushReplacementNamed('myprofile'))
+                  () => Navigator.of(context).popUntil((route) => route.isFirst))
             })
         .catchError((error) => {alert(context, 'Error', error.toString())});
   } else {
@@ -200,7 +201,7 @@ editUserFireStore(context, FirebaseFirestore firestore, UserModel user) async {
                   context,
                   'Éxito',
                   'Los cambios se han guardado correctamente',
-                  () => Navigator.of(context).pushReplacementNamed('myprofile'))
+                  () => Navigator.of(context).popUntil((route) => route.isFirst))
             })
         .catchError((error) => {alert(context, 'Error', error.toString())});
   }

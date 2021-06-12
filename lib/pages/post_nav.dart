@@ -73,8 +73,21 @@ class _PostState extends State<Post> {
   }
 
   _buildTitle() {
-      return Padding(
-        padding: EdgeInsets.all(7),
+    return Padding(
+      padding: EdgeInsets.all(7),
+      child: Container(
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 7,
+              offset: Offset(0, 3),
+            ),
+            ]
+        ),
         child: TextFormField(
             controller: _controllerTitle,
             decoration: InputDecoration(
@@ -85,15 +98,15 @@ class _PostState extends State<Post> {
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20.0),
                 borderSide: BorderSide(
-                  color: Colors.black,
-                  width: 2.0,
+                  color: Colors.grey,
+                  width: 1.0,
                 ),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20.0),
                 borderSide: BorderSide(
-                  color: Colors.black,
-                  width: 2.0,
+                  color: Colors.grey,
+                  width: 1.0,
                 ),
               ),
             ),
@@ -101,41 +114,55 @@ class _PostState extends State<Post> {
               post.titulo = value!;
             },
             validator: (value) => valTitle(value!)),
-      );
-    
+      ),
+    );
   }
 
   _buildContent() {
     return Padding(
       padding: EdgeInsets.all(7),
-      child: TextFormField(
-          controller: _controllerContent,
-          maxLines: 10,
-          minLines: 5,
-          decoration: InputDecoration(
-            fillColor: Colors.blueGrey,
-            hintText: "Contenido",
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20.0),
-              borderSide: BorderSide(
-                color: Colors.black,
-                width: 2.0,
+      child: Container(
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 7,
+              offset: Offset(0, 3),
+            ),
+            ]
+        ),
+        child: TextFormField(
+            controller: _controllerContent,
+            maxLines: 10,
+            minLines: 5,
+            decoration: InputDecoration(
+              fillColor: Colors.blueGrey,
+              hintText: "Contenido",
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20.0),
+                borderSide: BorderSide(
+                  color: Colors.grey,
+                  width: 1.0,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20.0),
+                borderSide: BorderSide(
+                  color: Colors.grey,
+                  width: 1.0,
+                ),
               ),
             ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20.0),
-              borderSide: BorderSide(
-                color: Colors.black,
-                width: 2.0,
-              ),
-            ),
-          ),
-          onSaved: (value) {
-            post.contenido = value!;
-          },
-          validator: (value) => valContent(value!)),
+            onSaved: (value) {
+              post.contenido = value!;
+            },
+            validator: (value) => valContent(value!)),
+      ),
     );
   }
 
@@ -145,32 +172,46 @@ class _PostState extends State<Post> {
       child: Row(
         children: [
           Flexible(
-            child: TextFormField(
-              controller: _controllerEnlaces,
-              decoration: InputDecoration(
-                fillColor: Colors.blueGrey,
-                hintText: "Nuevo enlace",
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15.0)),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                  borderSide: BorderSide(
-                    color: Colors.black,
-                    width: 2.0,
+            child: Container(
+              decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 7,
+              offset: Offset(0, 3),
+            ),
+            ]
+        ),
+              child: TextFormField(
+                controller: _controllerEnlaces,
+                decoration: InputDecoration(
+                  fillColor: Colors.blueGrey,
+                  hintText: "Nuevo enlace",
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15.0)),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                    borderSide: BorderSide(
+                      color: Colors.grey,
+                      width: 1.0,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                    borderSide: BorderSide(
+                      color: Colors.grey,
+                      width: 1.0,
+                    ),
                   ),
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                  borderSide: BorderSide(
-                    color: Colors.black,
-                    width: 2.0,
-                  ),
-                ),
+                onSaved: (value) {
+                  //post.titulo = value!;
+                },
+                //validator: (value) => valName(value!)
               ),
-              onSaved: (value) {
-                //post.titulo = value!;
-              },
-              //validator: (value) => valName(value!)
             ),
           ),
           Padding(padding: EdgeInsets.only(left: 5)),
@@ -201,9 +242,18 @@ class _PostState extends State<Post> {
         padding: EdgeInsets.all(7),
         child: Container(
           decoration: BoxDecoration(
-              //color: Color.fromRGBO(226, 247, 255, 1),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.black, width: 2)),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.grey, width: 1.0),
+            boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 7,
+              offset: Offset(0, 3),
+            ),
+            ]
+        ),
           height: 120,
           child: ListView.separated(
             separatorBuilder: (context, index) {
@@ -235,32 +285,46 @@ class _PostState extends State<Post> {
       child: Row(
         children: [
           Flexible(
-            child: TextFormField(
-              controller: _controllerTags,
-              decoration: InputDecoration(
-                fillColor: Colors.blueGrey,
-                hintText: "Nuevo Hashtag",
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15.0)),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                  borderSide: BorderSide(
-                    color: Colors.black,
-                    width: 2.0,
+            child: Container(
+              decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 7,
+              offset: Offset(0, 3),
+            ),
+            ]
+        ),
+              child: TextFormField(
+                controller: _controllerTags,
+                decoration: InputDecoration(
+                  fillColor: Colors.blueGrey,
+                  hintText: "Nuevo Hashtag",
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15.0)),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                    borderSide: BorderSide(
+                      color: Colors.grey,
+                      width: 1.0,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                    borderSide: BorderSide(
+                      color: Colors.grey,
+                      width: 1.0,
+                    ),
                   ),
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                  borderSide: BorderSide(
-                    color: Colors.black,
-                    width: 2.0,
-                  ),
-                ),
+                onSaved: (value) {
+                  //post.titulo = value!;
+                },
+                //validator: (value) => valName(value!)
               ),
-              onSaved: (value) {
-                //post.titulo = value!;
-              },
-              //validator: (value) => valName(value!)
             ),
           ),
           Padding(padding: EdgeInsets.only(left: 5)),
@@ -291,9 +355,18 @@ class _PostState extends State<Post> {
         padding: EdgeInsets.all(7),
         child: Container(
           decoration: BoxDecoration(
-              //color: Color.fromRGBO(226, 247, 255, 1),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.black, width: 2)),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.grey, width: 1.0),
+            boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 7,
+              offset: Offset(0, 3),
+            ),
+            ]
+        ),
           height: 120,
           child: ListView.separated(
             separatorBuilder: (context, index) {
@@ -320,74 +393,69 @@ class _PostState extends State<Post> {
   }
 
   _buildSaveButton() {
-    if(widget.edit!){
+    if (widget.edit!) {
       return Padding(
-      padding: const EdgeInsets.all(7),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-            primary: app_theme.primaryColor,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            minimumSize: new Size(190, 50)),
-        child: Text(
-          'Guardar',
-          style: new TextStyle(fontSize: 19),
+        padding: const EdgeInsets.all(7),
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              primary: app_theme.primaryColor,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)),
+              minimumSize: new Size(190, 50)),
+          child: Text(
+            'Guardar',
+            style: new TextStyle(fontSize: 19),
+          ),
+          onPressed: () async {
+            if (!_formKey.currentState!.validate()) {
+              return;
+            }
+            _formKey.currentState!.save();
+
+            post.enlaces = listaEnlaces;
+            post.hashtags = listaHashTags;
+
+            final DateTime now = DateTime.now();
+            final DateFormat formatter = DateFormat('dd-MM-yyyy');
+            final String formatted = formatter.format(now);
+            post.fecha = formatted;
+            await editPost(context, widget.document!, post);
+          },
         ),
-        onPressed: () async {
-          if (!_formKey.currentState!.validate()) {
-            return;
-          }
-          _formKey.currentState!.save();
-
-          post.enlaces = listaEnlaces;
-          post.hashtags = listaHashTags;
-
-          final DateTime now = DateTime.now();
-          final DateFormat formatter = DateFormat('dd-MM-yyyy');
-          final String formatted = formatter.format(now);
-          post.fecha = formatted;
-          await editPost(context, widget.document!, post);
-           //alert(
-           //    context, 'Éxito', 'La publicación se ha modificado correctamente', (){Navigator.pop(context);});
-          
-          //_resetAll();
-          //Navigator.pop(context);
-        },
-      ),
-    );
-    }else{
+      );
+    } else {
       return Padding(
-      padding: const EdgeInsets.all(7),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-            primary: app_theme.primaryColor,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            minimumSize: new Size(190, 50)),
-        child: Text(
-          'Publicar',
-          style: new TextStyle(fontSize: 19),
+        padding: const EdgeInsets.all(7),
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              primary: app_theme.primaryColor,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)),
+              minimumSize: new Size(190, 50)),
+          child: Text(
+            'Publicar',
+            style: new TextStyle(fontSize: 19),
+          ),
+          onPressed: () async {
+            if (!_formKey.currentState!.validate()) {
+              return;
+            }
+            _formKey.currentState!.save();
+
+            post.enlaces = listaEnlaces;
+            post.hashtags = listaHashTags;
+
+            final DateTime now = DateTime.now();
+            final DateFormat formatter = DateFormat('dd-MM-yyyy');
+            final String formatted = formatter.format(now);
+            post.fecha = formatted;
+            await addNewPost(post);
+            alert(context, 'Éxito',
+                'La publicación se ha realizado correctamente');
+            _resetAll();
+          },
         ),
-        onPressed: () async {
-          if (!_formKey.currentState!.validate()) {
-            return;
-          }
-          _formKey.currentState!.save();
-
-          post.enlaces = listaEnlaces;
-          post.hashtags = listaHashTags;
-
-          final DateTime now = DateTime.now();
-          final DateFormat formatter = DateFormat('dd-MM-yyyy');
-          final String formatted = formatter.format(now);
-          post.fecha = formatted;
-          await addNewPost(post);
-          alert(
-              context, 'Éxito', 'La publicación se ha realizado correctamente');
-          _resetAll();
-        },
-      ),
-    );
+      );
     }
   }
 
