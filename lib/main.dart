@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:forumdroid/models/user_model.dart';
 import 'package:forumdroid/pages/edit_profile.dart';
+import 'package:forumdroid/pages/generate_qr.dart';
 import 'package:forumdroid/pages/home.dart';
 import 'package:forumdroid/pages/login.dart';
 import 'package:forumdroid/pages/my_profile.dart';
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
         'registro' : (BuildContext context) => Registro(),
         'home': (BuildContext context) => Home(),
         'myprofile' : (BuildContext context) => MyProfile(),
+        'generate_qr'  : (BuildContext context) => GenerateQR()
         //'edit' : (BuildContext context) => EditProfile(),
       } 
     );
