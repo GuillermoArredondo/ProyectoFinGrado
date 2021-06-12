@@ -8,7 +8,6 @@ import 'package:forumdroid/utils/firestore.dart';
 import 'package:forumdroid/utils/general.dart';
 import 'package:forumdroid/utils/validations.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class EditProfile extends StatefulWidget {
   var user = UserModel();
@@ -20,6 +19,7 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
+
   final _formKey = GlobalKey<FormState>();
   final user = UserModel();
   File? imagen;
@@ -31,8 +31,6 @@ class _EditProfileState extends State<EditProfile> {
   @override
   initState() {
     userTest = this.widget.user;
-    print(userTest.imgUrl);
-    print(userTest.media);
     super.initState();
   }
 
@@ -50,10 +48,8 @@ class _EditProfileState extends State<EditProfile> {
             child: Form(
                 key: _formKey,
                 child: Column(
-                    //mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
                       _imageUser(),
-                      //_idUser(),
                       Padding(padding: EdgeInsets.all(40)),
                       _userNameInputBox(),
                       Padding(padding: EdgeInsets.all(10)),
@@ -68,21 +64,6 @@ class _EditProfileState extends State<EditProfile> {
       ),
     );
   }
-
-  // _imageUser() {
-  //   return CircleAvatar(
-  //     child: FutureBuilder<String>(
-  //           future: getIconPrefs(),
-  //           builder: (context, snapshot) {
-  //             if (snapshot.hasData) {
-  //               return Text(snapshot.data!, style: TextStyle(fontSize: 60),);
-  //             }
-  //             return CircularProgressIndicator();
-  //           },
-  //     ),
-  //     radius: 65,
-  //   );
-  // }
 
   _imageUser() {
     if (imagen == null) {
@@ -321,7 +302,6 @@ class _EditProfileState extends State<EditProfile> {
                       user.id = userTest.id;
                       user.idUser = userTest.idUser;
                       user.media = false;
-                      print('edit_profile: ' + user.imgUrl!);
                       editUser(context, user);
                       });
                 

@@ -1,4 +1,3 @@
-
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:forumdroid/pages/edit_profile.dart';
@@ -151,7 +150,6 @@ class _MyProfileState extends State<MyProfile> {
             padding: EdgeInsets.all(0),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),
-              //side: BorderSide(color: Colors.black),
             )
         )
     );

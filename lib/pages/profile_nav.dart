@@ -4,10 +4,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:forumdroid/models/user_model.dart';
 import 'package:forumdroid/pages/post_detail.dart';
 import 'package:forumdroid/pages/post_nav.dart';
-import 'package:forumdroid/theme/app_theme.dart';
 import 'package:forumdroid/utils/firestore.dart';
 import 'package:forumdroid/utils/general.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'my_profile.dart';
 
@@ -24,9 +22,6 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   @override
   void initState() {
-    if (widget.user != null) {
-      print(widget.user!.email.toString());
-    }
     super.initState();
   }
 
@@ -51,7 +46,6 @@ class _ProfileState extends State<Profile> {
                 decoration: BoxDecoration(
                     color: Color.fromRGBO(226, 247, 255, 1),
                     borderRadius: BorderRadius.circular(20),
-                    //border: Border.all(color: Colors.black, width: 1)
                     boxShadow: [
                       BoxShadow(
                         color: Colors.grey.withOpacity(0.5),
@@ -329,17 +323,14 @@ class _ProfileState extends State<Profile> {
           decoration: BoxDecoration(
               color: Color.fromRGBO(226, 247, 255, 1),
               borderRadius: BorderRadius.circular(20),
-              //border: Border.all(color: Colors.black, width: 1),
               boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 2,
-              blurRadius: 7,
-              offset: Offset(0, 3),
-            ),
-            ]
-          )
-      ),
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 2,
+                  blurRadius: 7,
+                  offset: Offset(0, 3),
+                ),
+              ])),
     );
   }
 
@@ -361,7 +352,6 @@ class _ProfileState extends State<Profile> {
       return Row(
         children: [
           Container(
-            //width: 20,
             child: Padding(
               padding: const EdgeInsets.only(left: 0),
               child: Column(
@@ -370,7 +360,6 @@ class _ProfileState extends State<Profile> {
                     children: [
                       Container(
                         width: 77,
-                        //alignment: Alignment.topRight,
                         child: Text(
                           document['fecha'],
                           style: _buildTextStyle(15.0, false),
@@ -388,7 +377,6 @@ class _ProfileState extends State<Profile> {
       return Row(
         children: [
           Container(
-            //width: 20,
             child: Padding(
               padding: const EdgeInsets.only(left: 0),
               child: Column(
@@ -397,7 +385,6 @@ class _ProfileState extends State<Profile> {
                     children: [
                       Container(
                         width: 77,
-                        //alignment: Alignment.topRight,
                         child: Text(
                           document['fecha'],
                           style: _buildTextStyle(15.0, false),
@@ -507,17 +494,14 @@ class _ProfileState extends State<Profile> {
         decoration: BoxDecoration(
             color: Color.fromRGBO(226, 236, 255, 1),
             borderRadius: BorderRadius.circular(20),
-            //border: Border.all(color: Colors.black, width: 1),
             boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 2,
-              blurRadius: 7,
-              offset: Offset(0, 3),
-            ),
-            ]
-        )
-    );
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 2,
+                blurRadius: 7,
+                offset: Offset(0, 3),
+              ),
+            ]));
   }
 
   _textContent(QueryDocumentSnapshot<Object?> document) {
@@ -569,8 +553,6 @@ class _ProfileState extends State<Profile> {
         ),
         style: ElevatedButton.styleFrom(
           padding: EdgeInsets.all(0),
-          //primary: Colors.black,
-          //shape: CircleBorder(),
         ),
       );
     } else {
@@ -578,13 +560,10 @@ class _ProfileState extends State<Profile> {
         onPressed: () {},
         child: FaIcon(
           FontAwesomeIcons.info,
-          //color: app_theme.primaryColor,
           size: 20,
         ),
         style: ElevatedButton.styleFrom(
           padding: EdgeInsets.all(0),
-          //primary: Colors.black,
-          //shape: CircleBorder(),
         ),
       );
     }

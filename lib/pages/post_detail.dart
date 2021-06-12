@@ -347,12 +347,11 @@ class _PostDetailState extends State<PostDetail> {
         link,
         style: TextStyle(color: Colors.blue),
       ),
-      //trailing: new Icon(FontAwesomeIcons.trash),
       onTap: () async {
         if (await canLaunch('https://' + link)) {
           await launch('https://' + link);
         } else {
-          print('NO');
+          
         }
       },
     );
@@ -371,14 +370,8 @@ class _PostDetailState extends State<PostDetail> {
   _vote() async {
     await getIdUserPrefs().then((value) async {
       if (await searchVote(value, widget.document)) {
-        setState(() {
-          //voted = true;
-        });
         quitarVoto(value, widget.document);
       } else {
-        setState(() {
-          //voted = false;
-        });
         ponerVoto(value, widget.document);
       }
     });
@@ -390,12 +383,10 @@ class _PostDetailState extends State<PostDetail> {
         setState(() {
           voted = true;
         });
-        //quitarVoto(value, widget.document);
       } else {
         setState(() {
           voted = false;
         });
-        //ponerVoto(value, widget.document);
       }
     });
   }

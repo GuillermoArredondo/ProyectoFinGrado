@@ -32,7 +32,6 @@ class _PostState extends State<Post> {
   @override
   void initState() {
     if (widget.edit!) {
-      print(widget.document!.id);
       _controllerTitle.text = widget.document!['title'];
       _controllerContent.text = widget.document!['content'];
       listaEnlaces = List<String>.from(widget.document!['listEnlaces']);

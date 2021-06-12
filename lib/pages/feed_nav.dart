@@ -5,7 +5,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:forumdroid/pages/post_detail.dart';
 import 'package:forumdroid/pages/profile_nav.dart';
 import 'package:forumdroid/utils/firestore.dart';
-import 'package:forumdroid/utils/general.dart';
 
 class Feed extends StatefulWidget {
   @override
@@ -87,7 +86,6 @@ class _FeedState extends State<Feed> {
           decoration: BoxDecoration(
             color: Color.fromRGBO(226, 247, 255, 1),
             borderRadius: BorderRadius.circular(15),
-            //border: Border.all(color: Colors.black, width: 1),
             boxShadow: [
               BoxShadow(
                 color: Colors.grey.withOpacity(0.5),

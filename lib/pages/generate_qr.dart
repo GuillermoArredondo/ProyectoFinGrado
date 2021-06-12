@@ -1,8 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:forumdroid/utils/general.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -119,7 +117,6 @@ class _GenerateQRState extends State<GenerateQR> {
             decoration: BoxDecoration(
               color: Color.fromRGBO(226, 236, 255, 1),
               borderRadius: BorderRadius.circular(20),
-              //border: Border.all(color: Colors.black, width: 1)
               boxShadow: [
                 BoxShadow(
                   color: Colors.grey.withOpacity(0.5),

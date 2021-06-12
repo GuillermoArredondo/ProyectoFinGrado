@@ -132,6 +132,7 @@ saveUserSharedPrefs(UserModel user) async {
   await prefs.setString('idUser', idUser!);
 }
 
+//Obtiene el usuario guardado en las shared prefs
 Future<dynamic> getUserfromSharePrefs() async {
   final user = UserModel();
   user.idUser = await getIdUserPrefs();
@@ -143,17 +144,14 @@ Future<dynamic> getUserfromSharePrefs() async {
   return user;
 }
 
-UserModel? getUser() {
-  getUserfromSharePrefs().then((value) {
-    return value;
-  });
-}
-
 //Elimina las shared prefs seteadas
 deleteUserPrefs() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.clear();
 }
+
+
+//Los siguientes métodos obtienen uno de los valores de las shared prefs:
 
 Future<String> getNamePrefs() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
