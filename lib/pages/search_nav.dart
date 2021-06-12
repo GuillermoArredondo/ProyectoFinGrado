@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:forumdroid/pages/post_nav.dart';
+import 'package:forumdroid/pages/profile_nav.dart';
+import 'package:forumdroid/utils/firestore.dart';
 import 'package:permission_handler/permission_handler.dart';
 //import 'package:qrscan/qrscan.dart' as Scanner;
 
@@ -69,6 +72,11 @@ class _SearchState extends State<Search> {
       barcodeScanRes = 'Failed to get platform version.';
     }
     if (!mounted) return;
-    print(barcodeScanRes);
+      getUserProfile(barcodeScanRes).then((value) {
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => Profile(true,value)));
+      });
+
+      
   }
 }
