@@ -1,17 +1,12 @@
-import 'dart:async';
-import 'dart:io';
-import 'dart:typed_data';
-import 'dart:ui';
 
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:forumdroid/utils/general.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:screenshot/screenshot.dart';
-import 'package:share/share.dart';
+
 
 class GenerateQR extends StatefulWidget {
   @override
@@ -19,7 +14,6 @@ class GenerateQR extends StatefulWidget {
 }
 
 class _GenerateQRState extends State<GenerateQR> {
-  final _screenshotController = ScreenshotController();
 
   @override
   Widget build(BuildContext context) {
@@ -124,14 +118,11 @@ class _GenerateQRState extends State<GenerateQR> {
       future: getIdUserPrefs(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return Screenshot(
-            controller: _screenshotController,
-            child: Container(
-              height: 300,
-              width: 300,
-              child: QrImage(
-                data: snapshot.data!,
-              ),
+          return Container(
+            height: 300,
+            width: 300,
+            child: QrImage(
+              data: snapshot.data!,
             ),
           );
         }
@@ -164,7 +155,5 @@ class _GenerateQRState extends State<GenerateQR> {
             )));
   }
 
-  screenShotAndShare() async {
-    
-  }
+  screenShotAndShare() async {}
 }

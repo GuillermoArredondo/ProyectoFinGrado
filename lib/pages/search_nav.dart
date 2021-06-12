@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:qrscan/qrscan.dart' as Scanner;
+import 'package:permission_handler/permission_handler.dart';
+//import 'package:qrscan/qrscan.dart' as Scanner;
 
 class Search extends StatefulWidget {
 
@@ -9,6 +12,9 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
+  String _scanBarcode = 'Unknown';
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +47,7 @@ class _SearchState extends State<Search> {
           color: Colors.black,
         ),
         onPressed: () {
-          _leer();
+          scanQR();
         },
         style: ElevatedButton.styleFrom(
             primary: Color.fromRGBO(226, 247, 255, 1),
@@ -53,8 +59,16 @@ class _SearchState extends State<Search> {
             )));
   }
 
-  _leer() async {
-    String barcode = await Scanner.scan();
-    print(barcode);
+  Future<void> scanQR() async {
+    String barcodeScanRes;
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.QR);
+      print(barcodeScanRes);
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
+    }
+    if (!mounted) return;
+    print(barcodeScanRes);
   }
 }
