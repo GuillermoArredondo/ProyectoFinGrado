@@ -1,16 +1,15 @@
-# forumdroid
+# Forum Droid
 
-A new Flutter project.
+Desarrollo de una aplicación android, a modo de foro y red social, para cualquier tipo de usuario
 
-## Getting Started
+## Desarrollado con 🚀
 
-This project is a starting point for a Flutter application.
+* [Flutter](https://flutter.dev) - Como SDK de android
+* [Firebase](https://firebase.google.com/) - Como Backend de la App
+* [Visual Studio Code](https://code.visualstudio.com/) - Como Framework de trabajo
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+## Autor ✒️
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+* **Guillermo Arredondo Pérez** - [villanuevand](https://github.com/GuillermoArredondo)
+
