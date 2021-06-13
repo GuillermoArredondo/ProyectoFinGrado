@@ -1,14 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:forumdroid/models/user_model.dart';
 import 'package:forumdroid/pages/feed_nav.dart';
 import 'package:forumdroid/pages/post_nav.dart';
 import 'package:forumdroid/pages/profile_nav.dart';
 import 'package:forumdroid/pages/search_nav.dart';
 import 'package:forumdroid/theme/app_theme.dart';
-import 'package:forumdroid/utils/firestore.dart';
-import 'package:forumdroid/utils/general.dart';
 
 
 class Home extends StatefulWidget {
@@ -20,7 +16,6 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> with TickerProviderStateMixin{
 
   TabController? controller;
-  //QueryDocumentSnapshot<Object?>? document;
 
   @override
   void initState() {

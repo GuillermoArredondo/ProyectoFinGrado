@@ -10,7 +10,7 @@ bool _isValPass(String pass) {
   return pass.length >= 6 ? true : false;
 }
 
-//valida el email y devulve respuesta
+//valida el email y devuelve respuesta
 valEmail(String email) {
   if(email == '..'){
     return null;
@@ -27,7 +27,7 @@ valEmail(String email) {
   }
 }
 
-//valida la password y devulve respuesta
+//valida la password y devuelve respuesta
 valPass(String pass) {
   if (pass.isNotEmpty) {
     if (_isValPass(pass)) {
@@ -40,7 +40,7 @@ valPass(String pass) {
   }
 }
 
-//valida la password en el caso de la edición y devulve respuesta
+//valida la password en el caso de la edición y devuelve respuesta
 valPassEdit(String pass){
   if (_isValPass(pass)) {
       return null;
@@ -59,6 +59,7 @@ valName(String name) {
   }
 }
 
+//valida el titulo del post y devuelve la respuesta
 valTitle(String title){
   if (title.isNotEmpty) {
     return null;
@@ -67,6 +68,7 @@ valTitle(String title){
   }
 }
 
+//Valida el contenido del post y devuelve la respuesta
 valContent(String title){
   if (title.isNotEmpty) {
     return null;

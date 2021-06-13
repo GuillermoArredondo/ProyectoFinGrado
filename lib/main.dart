@@ -1,15 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:forumdroid/models/user_model.dart';
-import 'package:forumdroid/pages/edit_profile.dart';
 import 'package:forumdroid/pages/generate_qr.dart';
 import 'package:forumdroid/pages/home.dart';
 import 'package:forumdroid/pages/login.dart';
 import 'package:forumdroid/pages/my_profile.dart';
+import 'package:forumdroid/pages/profile_nav.dart';
 import 'package:forumdroid/pages/registro.dart';
-import 'package:forumdroid/utils/general.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   //Inicializa todas las dependencias de Firebase antes de Correr Flutter
@@ -21,7 +17,6 @@ void main() {
   
 }
 
-// ignore: must_be_immutable
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -34,8 +29,8 @@ class MyApp extends StatelessWidget {
         'registro' : (BuildContext context) => Registro(),
         'home': (BuildContext context) => Home(),
         'myprofile' : (BuildContext context) => MyProfile(),
+        'profile_nav' : (BuildContext context) => Profile(false),
         'generate_qr'  : (BuildContext context) => GenerateQR()
-        //'edit' : (BuildContext context) => EditProfile(),
       } 
     );
   }

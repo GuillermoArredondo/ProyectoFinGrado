@@ -19,7 +19,6 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //backgroundColor: app_theme.primaryColor,
       resizeToAvoidBottomInset: false,
       body: Container(
         decoration: BoxDecoration(
@@ -31,7 +30,6 @@ class _LoginState extends State<Login> {
           child: Form(
               key: _formKey,
               child: Column(
-                  //mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
                 Image.asset(
                   'assets/iconoApp.png',
@@ -216,7 +214,6 @@ class _LoginState extends State<Login> {
             onTap: () => Navigator.push(
                 context, MaterialPageRoute(builder: (context) => Registro())),
           ),
-          //Text("Registrarse", style: TextStyle(fontSize: 20, color: app_theme.primaryColor))
         ],
       ),
     );

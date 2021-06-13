@@ -1,12 +1,8 @@
-
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:forumdroid/utils/general.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-
 
 class GenerateQR extends StatefulWidget {
   @override
@@ -14,7 +10,6 @@ class GenerateQR extends StatefulWidget {
 }
 
 class _GenerateQRState extends State<GenerateQR> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,7 +50,7 @@ class _GenerateQRState extends State<GenerateQR> {
                 decoration: new BoxDecoration(
                     shape: BoxShape.circle,
                     image: new DecorationImage(
-                        fit: BoxFit.fill,
+                        fit: BoxFit.cover,
                         image: new NetworkImage(snapshot.data!))));
           }
           return CircleAvatar(
@@ -119,6 +114,18 @@ class _GenerateQRState extends State<GenerateQR> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Container(
+            decoration: BoxDecoration(
+              color: Color.fromRGBO(226, 236, 255, 1),
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 2,
+                  blurRadius: 7,
+                  offset: Offset(0, 3),
+                ),
+              ],
+            ),
             height: 300,
             width: 300,
             child: QrImage(
@@ -131,29 +138,29 @@ class _GenerateQRState extends State<GenerateQR> {
     );
   }
 
-  _buildShare() {
-    return ElevatedButton.icon(
-        label: Text('Compartir',
-            style: TextStyle(
-              fontSize: 18,
-              color: Colors.black,
-            )),
-        icon: Icon(
-          FontAwesomeIcons.shareAlt,
-          color: Colors.black,
-        ),
-        onPressed: () {
-          screenShotAndShare();
-        },
-        style: ElevatedButton.styleFrom(
-            primary: Color.fromRGBO(226, 247, 255, 1),
-            minimumSize: Size(270, 50),
-            padding: EdgeInsets.all(0),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-              side: BorderSide(color: Colors.black),
-            )));
-  }
+  // _buildShare() {
+  //   return ElevatedButton.icon(
+  //       label: Text('Compartir',
+  //           style: TextStyle(
+  //             fontSize: 18,
+  //             color: Colors.black,
+  //           )),
+  //       icon: Icon(
+  //         FontAwesomeIcons.shareAlt,
+  //         color: Colors.black,
+  //       ),
+  //       onPressed: () {
+  //         screenShotAndShare();
+  //       },
+  //       style: ElevatedButton.styleFrom(
+  //           primary: Color.fromRGBO(226, 247, 255, 1),
+  //           minimumSize: Size(270, 50),
+  //           padding: EdgeInsets.all(0),
+  //           shape: RoundedRectangleBorder(
+  //             borderRadius: BorderRadius.circular(15),
+  //             side: BorderSide(color: Colors.black),
+  //           )));
+  // }
 
-  screenShotAndShare() async {}
+  // screenShotAndShare() async {}
 }

@@ -8,8 +8,6 @@ class PostModel {
   List<String>? idUser;
   int? votos;
   String? fecha;
-  //List<Comentarios> comentarios 
-  //List<String>? urlImages;
 
   PostModel({
     this.id,
@@ -20,7 +18,6 @@ class PostModel {
     this.idUser,
     this.votos,
     this.fecha
-    //this.urlImages,
   });
 
 }

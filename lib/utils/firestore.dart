@@ -4,20 +4,24 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:forumdroid/models/post_model.dart';
 import 'package:forumdroid/models/user_model.dart';
-import 'package:forumdroid/pages/profile_nav.dart';
-import 'package:forumdroid/utils/auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'general.dart';
 
+
+final _firestore = FirebaseFirestore.instance;
+
 //añadir nuevo usuario a Firestore
-void addNewUser(FirebaseFirestore firestore, UserModel user) {
-  print('addNewUser');
+void addNewUser(UserModel user) {
+  var password;
+  if (user.password != '') {
+    password = cifrarPass(user.password!);
+  } else {
+    password = user.password;
+  }
   var id = user.id;
   var name = user.name;
   var email = user.email;
-  var password = user.password;
   var imgUrl = user.imgUrl;
-  firestore.collection("users").add({
+  _firestore.collection("users").add({
     "id": '$id',
     "name": '$name',
     "email": '$email',
@@ -28,7 +32,6 @@ void addNewUser(FirebaseFirestore firestore, UserModel user) {
 
 //Sube la imagen del usuario y devuelve la url del Callback de Storage
 Future<String> uploadImgToFireStore(String idUser, File image) async {
-  print(idUser);
   if (image != null) {
     final storage = FirebaseStorage.instance;
     var snapshot = await storage
@@ -52,8 +55,7 @@ Future<String> getUserImage(String idUser) async {
 
 //Obtiene el UserName de un usuario por id
 Future<String> getUserNameById(String idUser) async {
-  final firestore = FirebaseFirestore.instance;
-  CollectionReference collectionReference = firestore.collection('users');
+  CollectionReference collectionReference = _firestore.collection('users');
   QuerySnapshot<Object?> users =
       await collectionReference.where('id', isEqualTo: idUser).get();
 
@@ -67,8 +69,7 @@ Future<String> getUserNameById(String idUser) async {
 //Obtiene el numero de post que ha hecho un usuario logged
 Future<int> getNumPosts() async {
   String idUser = await getIdUserPrefs();
-  final firestore = FirebaseFirestore.instance;
-  CollectionReference collectionReference = firestore.collection('posts');
+  CollectionReference collectionReference = _firestore.collection('posts');
   QuerySnapshot<Object?> users =
       await collectionReference.where('idUser', isEqualTo: idUser).get();
 
@@ -79,8 +80,7 @@ Future<int> getNumPosts() async {
 
 //Obtiene el numero de post que ha hecho un usuario
 Future<int> getNumPostsUser(String idUser) async {
-  final firestore = FirebaseFirestore.instance;
-  CollectionReference collectionReference = firestore.collection('posts');
+  CollectionReference collectionReference = _firestore.collection('posts');
   QuerySnapshot<Object?> users =
       await collectionReference.where('idUser', isEqualTo: idUser).get();
 
@@ -91,9 +91,7 @@ Future<int> getNumPostsUser(String idUser) async {
 
 //Elimina una publicacion
 deletePost(context, String idPost) async {
-  final firestore = FirebaseFirestore.instance;
-  print('a eliminar el doc ' + idPost);
-  await firestore.collection('posts').doc(idPost).delete().then((value) {
+  await _firestore.collection('posts').doc(idPost).delete().then((value) {
     alert(context, 'Éxito', 'Publicación eliminada correctamente');
   });
 }
@@ -119,18 +117,20 @@ changeImageUser(String idUser, File image) async {
 //Este método tambien es llamado cuando se intenta logear con una red social,
 //Y el usuario no esta registrado en firestore, de esta manera se registrará
 getUserByEmail(
-    context, FirebaseFirestore firestore, UserModel user, bool media) async {
-  CollectionReference collectionReference = firestore.collection('users');
+    context, UserModel user, bool media) async {
+  CollectionReference collectionReference = _firestore.collection('users');
   QuerySnapshot<Object?> users =
       await collectionReference.where('email', isEqualTo: user.email).get();
 
   if (users.docs.isEmpty) {
+    print('estoy dentro');
     user.id = genId();
     user.password = '';
     user.media = true;
-    addNewUser(firestore, user);
+    addNewUser(user);
     saveUserSharedPrefs(user);
   } else {
+    print('estoy fuera');
     List<UserModel> list = [];
     for (var doc in users.docs) {
       UserModel user = new UserModel();
@@ -143,15 +143,13 @@ getUserByEmail(
       user.media = media;
       list.add(user);
     }
-    print('getUserByEmail');
     saveUserSharedPrefs(list[0]);
   }
 }
 
 //Obtiene el usuario entero por email
 Future<dynamic> getUserProfile(String idUser)async{
-  final firestore = FirebaseFirestore.instance;
-  CollectionReference collectionReference = firestore.collection('users');
+  CollectionReference collectionReference = _firestore.collection('users');
   QuerySnapshot<Object?> users =
       await collectionReference.where('id', isEqualTo: idUser).get();
 
@@ -168,9 +166,8 @@ Future<dynamic> getUserProfile(String idUser)async{
 }
 
 //Edita un usuario de firestore
-editUserFireStore(context, FirebaseFirestore firestore, UserModel user) async {
-  print('editUserFireStore: ' + user.imgUrl!);
-  CollectionReference collectionReference = firestore.collection('users');
+editUserFireStore(context, UserModel user) async {
+  CollectionReference collectionReference = _firestore.collection('users');
 
   if (user.password!.isNotEmpty) {
     collectionReference
@@ -187,7 +184,7 @@ editUserFireStore(context, FirebaseFirestore firestore, UserModel user) async {
                   context,
                   'Éxito',
                   'Los cambios se han guardado correctamente',
-                  () => Navigator.of(context).pushReplacementNamed('myprofile'))
+                  () => Navigator.of(context).popUntil((route) => route.isFirst))
             })
         .catchError((error) => {alert(context, 'Error', error.toString())});
   } else {
@@ -200,7 +197,7 @@ editUserFireStore(context, FirebaseFirestore firestore, UserModel user) async {
                   context,
                   'Éxito',
                   'Los cambios se han guardado correctamente',
-                  () => Navigator.of(context).pushReplacementNamed('myprofile'))
+                  () => Navigator.of(context).popUntil((route) => route.isFirst))
             })
         .catchError((error) => {alert(context, 'Error', error.toString())});
   }
@@ -208,7 +205,6 @@ editUserFireStore(context, FirebaseFirestore firestore, UserModel user) async {
 
 //Añadir nuevo post a Firestore
 addNewPost(PostModel post) async {
-  final firestore = FirebaseFirestore.instance;
   var id = genId();
   var title = post.titulo;
   var content = post.contenido;
@@ -218,7 +214,7 @@ addNewPost(PostModel post) async {
   var idUser = await getIdUserPrefs();
   var fecha = post.fecha;
   List<String> listVotos = [];
-  firestore.collection("posts").add({
+  _firestore.collection("posts").add({
     "id": '$id',
     "title": '$title',
     "content": '$content',
@@ -233,8 +229,7 @@ addNewPost(PostModel post) async {
 
 //Edita una publicacion
 editPost(context, QueryDocumentSnapshot<Object?> document, PostModel post){
-  final firestore = FirebaseFirestore.instance;
-  CollectionReference collectionReference = firestore.collection('posts');
+  CollectionReference collectionReference = _firestore.collection('posts');
   
     collectionReference
     .doc(document.id)
@@ -266,9 +261,7 @@ editPost(context, QueryDocumentSnapshot<Object?> document, PostModel post){
 
 //Buscar el id de un usuario en la lista de los votos de un post
 searchVote(String idUser, QueryDocumentSnapshot<Object?> document) async {
-  print(idUser);
-  final firestore = FirebaseFirestore.instance;
-  CollectionReference collectionReference = firestore.collection('posts');
+  CollectionReference collectionReference = _firestore.collection('posts');
   QuerySnapshot<Object?> post =
       await collectionReference.where('id', isEqualTo: document['id']).get();
   List<String> votos = [];
@@ -284,8 +277,7 @@ searchVote(String idUser, QueryDocumentSnapshot<Object?> document) async {
 
 //Pone un voto en una publicacion
 ponerVoto(String idUser, QueryDocumentSnapshot<Object?> document) {
-  final firestore = FirebaseFirestore.instance;
-  CollectionReference collectionReference = firestore.collection('posts');
+  CollectionReference collectionReference = _firestore.collection('posts');
   List<String> lista = List.from(document['listVotos']);
   var votos = lista.length;
   votos = votos + 1;
@@ -301,10 +293,9 @@ ponerVoto(String idUser, QueryDocumentSnapshot<Object?> document) {
       });
 }
 
-//Quitar un voto de una publicación
+//Quita un voto de una publicación
 quitarVoto(String idUser, QueryDocumentSnapshot<Object?> document) {
-  final firestore = FirebaseFirestore.instance;
-  CollectionReference collectionReference = firestore.collection('posts');
+  CollectionReference collectionReference = _firestore.collection('posts');
   List<String> lista = List.from(document['listVotos']);
   var votos = lista.length;
   votos = votos - 1;

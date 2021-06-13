@@ -2,22 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:forumdroid/pages/post_nav.dart';
 import 'package:forumdroid/pages/profile_nav.dart';
 import 'package:forumdroid/utils/firestore.dart';
-import 'package:permission_handler/permission_handler.dart';
-//import 'package:qrscan/qrscan.dart' as Scanner;
 
 class Search extends StatefulWidget {
-
   @override
   _SearchState createState() => _SearchState();
 }
 
 class _SearchState extends State<Search> {
-  String _scanBarcode = 'Unknown';
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,10 +21,7 @@ class _SearchState extends State<Search> {
       body: Center(
         child: Container(
           child: Column(
-            children: [
-              Padding(padding: EdgeInsets.all(20)),
-              _buildButton()
-            ],
+            children: [Padding(padding: EdgeInsets.all(20)), _buildButton()],
           ),
         ),
       ),
@@ -58,7 +48,6 @@ class _SearchState extends State<Search> {
             padding: EdgeInsets.all(0),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),
-              side: BorderSide(color: Colors.black),
             )));
   }
 
@@ -67,16 +56,13 @@ class _SearchState extends State<Search> {
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancel', true, ScanMode.QR);
-      print(barcodeScanRes);
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
     }
     if (!mounted) return;
-      getUserProfile(barcodeScanRes).then((value) {
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => Profile(true,value)));
-      });
-
-      
+    getUserProfile(barcodeScanRes).then((value) {
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => Profile(true, value)));
+    });
   }
 }

@@ -8,7 +8,6 @@ import 'package:forumdroid/utils/firestore.dart';
 import 'package:forumdroid/utils/general.dart';
 import 'package:forumdroid/utils/validations.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class EditProfile extends StatefulWidget {
   var user = UserModel();
@@ -20,6 +19,7 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
+
   final _formKey = GlobalKey<FormState>();
   final user = UserModel();
   File? imagen;
@@ -31,8 +31,6 @@ class _EditProfileState extends State<EditProfile> {
   @override
   initState() {
     userTest = this.widget.user;
-    print(userTest.imgUrl);
-    print(userTest.media);
     super.initState();
   }
 
@@ -50,10 +48,8 @@ class _EditProfileState extends State<EditProfile> {
             child: Form(
                 key: _formKey,
                 child: Column(
-                    //mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
                       _imageUser(),
-                      //_idUser(),
                       Padding(padding: EdgeInsets.all(40)),
                       _userNameInputBox(),
                       Padding(padding: EdgeInsets.all(10)),
@@ -68,21 +64,6 @@ class _EditProfileState extends State<EditProfile> {
       ),
     );
   }
-
-  // _imageUser() {
-  //   return CircleAvatar(
-  //     child: FutureBuilder<String>(
-  //           future: getIconPrefs(),
-  //           builder: (context, snapshot) {
-  //             if (snapshot.hasData) {
-  //               return Text(snapshot.data!, style: TextStyle(fontSize: 60),);
-  //             }
-  //             return CircularProgressIndicator();
-  //           },
-  //     ),
-  //     radius: 65,
-  //   );
-  // }
 
   _imageUser() {
     if (imagen == null) {
@@ -100,7 +81,7 @@ class _EditProfileState extends State<EditProfile> {
                       decoration: new BoxDecoration(
                           shape: BoxShape.circle,
                           image: new DecorationImage(
-                              fit: BoxFit.fill,
+                              fit: BoxFit.cover,
                               image: new NetworkImage(snapshot.data!))));
                 }
                 return CircleAvatar(
@@ -321,64 +302,26 @@ class _EditProfileState extends State<EditProfile> {
                       user.id = userTest.id;
                       user.idUser = userTest.idUser;
                       user.media = false;
-                      print('edit_profile: ' + user.imgUrl!);
                       editUser(context, user);
                       });
                 
               } else {
-                user.imgUrl = userTest.imgUrl;
+                if(userTest.imgUrl != 'null'){
+                  user.imgUrl = userTest.imgUrl;
+                }else{
+                  user.imgUrl = 'null';
+                }
                 user.id = userTest.id;
                 user.idUser = userTest.idUser;
                 user.media = false;
-                user.imgUrl = 'null';
                 editUser(context, user);
               }
             } else {
               alert(context, 'Error',
                   'No puedes editar tu perfil si has accedido con una red social');
             }
-
-            //getIdUserPrefs().then((value) => uploadImgToFireStore(value, imagen!));
-            //await prefs.getBool('media').then((value) => print(value));
-            //bool media = false;
-            //media = await  prefs.getBool('media')!;
-            //getMediaPrefs().then((value) => _edit(value));
-            // if (!media) {
-            //   if (imagen != null) {
-            //     print('Estoy en no media y si foto');
-            //     getIdUserPrefs()
-            //         .then((value) => uploadImgToFireStore(value, imagen!));
-            //     editUser(context, user);
-            //     hidealertLoading(context);
-            //   } else {
-            //     editUser(context, user);
-            //   }
-            // } else {
-            //   alert(context, 'Error',
-            //       'No puedes editar tu perfil si has accedido con una red social');
-            // }
-            print(userTest.idUser);
           }),
     );
-  }
-
-  _edit(value) {
-    if (!value) {
-      if (imagen != null) {
-        getIdUserPrefs().then((value) => uploadImgToFireStore(value, imagen!));
-        editUser(context, user);
-      } else {
-        editUser(context, user);
-      }
-    } else {
-      alert(context, 'Error',
-          'No puedes editar tu perfil si has accedido con una red social');
-    }
-  }
-
-  _setId(value) {
-    idUser = value;
-    //print(idUser);
   }
 
   seleccionarImagen(context) {
