@@ -370,9 +370,15 @@ class _PostDetailState extends State<PostDetail> {
   _vote() async {
     await getIdUserPrefs().then((value) async {
       if (await searchVote(value, widget.document)) {
+        setState(() {
+          
+        });
         quitarVoto(value, widget.document);
       } else {
         ponerVoto(value, widget.document);
+        setState(() {
+          
+        });
       }
     });
   }
