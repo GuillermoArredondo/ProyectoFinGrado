@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "982575109544",
+    "project_id": "forumdroid-101a0",
+    "storage_bucket": "forumdroid-101a0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:982575109544:android:6db685e32fb23605faf99d",
+        "android_client_info": {
+          "package_name": "com.guille.forumdroid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "982575109544-317otapqs6id2n35pv92emgtq7f80rdm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCENwXrLW2THWjhnevJEqNjLcGh3lXlnEc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "982575109544-317otapqs6id2n35pv92emgtq7f80rdm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
