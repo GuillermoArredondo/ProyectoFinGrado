@@ -70,12 +70,16 @@ registerUser(context, UserModel user) async {
           () => Navigator.pop(context));
     });
   } on FirebaseAuthException catch (error) {
+    hidealertLoading(context);
     if (error.code == 'email-already-in-use') {
       alert(context, 'Error', 'Ese email ya está registrado');
+      
     } else {
+      //hidealertLoading(context);
       alert(context, 'Error', error.message.toString());
     }
   } catch (error) {
+    hidealertLoading(context);
     alert(context, 'Error', error.toString());
   }
 }
