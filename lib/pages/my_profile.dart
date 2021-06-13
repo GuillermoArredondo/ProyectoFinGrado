@@ -76,7 +76,7 @@ class _MyProfileState extends State<MyProfile> {
                 decoration: new BoxDecoration(
                     shape: BoxShape.circle,
                     image: new DecorationImage(
-                        fit: BoxFit.fill,
+                        fit: BoxFit.cover,
                         image: new NetworkImage(snapshot.data!))));
           }
           return CircleAvatar(

@@ -92,7 +92,7 @@ class _ProfileState extends State<Profile> {
                       decoration: new BoxDecoration(
                           shape: BoxShape.circle,
                           image: new DecorationImage(
-                              fit: BoxFit.fill,
+                              fit: BoxFit.cover,
                               image: new NetworkImage(snapshot.data!))));
                 }
                 return CircleAvatar(
@@ -140,7 +140,7 @@ class _ProfileState extends State<Profile> {
           decoration: new BoxDecoration(
               shape: BoxShape.circle,
               image: new DecorationImage(
-                  fit: BoxFit.fill,
+                  fit: BoxFit.cover,
                   image: new NetworkImage(widget.user!.imgUrl!))));
     } else {
       return CircleAvatar(
@@ -439,7 +439,7 @@ class _ProfileState extends State<Profile> {
     return Row(
       children: [
         Container(
-            padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
+            padding: EdgeInsets.fromLTRB(0, 25, 0, 0),
             child: Text(
               document['title'],
               style: _buildTextStyle(17.0, false),
@@ -505,7 +505,7 @@ class _ProfileState extends State<Profile> {
   }
 
   _textContent(QueryDocumentSnapshot<Object?> document) {
-    if (document['content'].toString().length > 151) {
+    if (document['content'].toString().length > 215) {
       return Text(
         document['content'].toString().substring(0, 215) + '...',
         style: _buildTextStyle(14.0, false),

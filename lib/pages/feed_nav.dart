@@ -122,7 +122,7 @@ class _FeedState extends State<Feed> {
             });
           },
           child: Container(
-            width: 180,
+            width: 214,
             child: Column(
               children: [
                 Row(
@@ -139,7 +139,7 @@ class _FeedState extends State<Feed> {
                                 decoration: new BoxDecoration(
                                     shape: BoxShape.circle,
                                     image: new DecorationImage(
-                                        fit: BoxFit.fill,
+                                        fit: BoxFit.cover,
                                         image:
                                             new NetworkImage(snapshot.data!))));
                           }
@@ -187,7 +187,7 @@ class _FeedState extends State<Feed> {
         Container(
           //width: 20,
           child: Padding(
-            padding: const EdgeInsets.only(left: 77),
+            padding: const EdgeInsets.only(left: 52),
             child: Column(
               children: [
                 Row(

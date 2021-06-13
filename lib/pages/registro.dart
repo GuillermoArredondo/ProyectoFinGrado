@@ -104,7 +104,7 @@ class _RegistroState extends State<Registro> {
                   border: Border.all(color: Colors.black, width: 1),
                   shape: BoxShape.circle,
                   image: new DecorationImage(
-                      fit: BoxFit.fill, image: FileImage(imagen!))),
+                      fit: BoxFit.cover, image: FileImage(imagen!))),
             ),
             Padding(
               padding: const EdgeInsets.only(bottom: 80, left: 0),

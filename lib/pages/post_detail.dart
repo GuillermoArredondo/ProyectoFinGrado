@@ -143,7 +143,7 @@ class _PostDetailState extends State<PostDetail> {
     return Row(
       children: [
         Container(
-          width: 180,
+          width: 214,
           child: Column(
             children: [
               Row(
@@ -160,7 +160,7 @@ class _PostDetailState extends State<PostDetail> {
                               decoration: new BoxDecoration(
                                   shape: BoxShape.circle,
                                   image: new DecorationImage(
-                                      fit: BoxFit.fill,
+                                      fit: BoxFit.cover,
                                       image:
                                           new NetworkImage(snapshot.data!))));
                         }
@@ -207,7 +207,7 @@ class _PostDetailState extends State<PostDetail> {
         Container(
           //width: 20,
           child: Padding(
-            padding: const EdgeInsets.only(left: 77),
+            padding: const EdgeInsets.only(left: 52),
             child: Column(
               children: [
                 Row(
@@ -337,7 +337,7 @@ class _PostDetailState extends State<PostDetail> {
     if (links.length <= 1) {
       return 40.0;
     } else {
-      return links.length * 50.0;
+      return links.length * 55.0;
     }
   }
 
@@ -402,7 +402,11 @@ class _PostDetailState extends State<PostDetail> {
     var doc = document['content'].toString().length;
     if (doc < 100) {
       return 205.0;
-    } else if (doc > 100 && doc < 300) {
+    } else if (doc > 100 && doc < 150) {
+      return document['content'].toString().length * 1.85;
+    } else if (doc > 150 && doc < 200) {
+      return document['content'].toString().length * 1.62;
+    }else if(doc >= 200 && doc < 300){
       return document['content'].toString().length * 1.15;
     } else {
       return document['content'].toString().length * 0.75;

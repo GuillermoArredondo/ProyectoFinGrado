@@ -11,10 +11,15 @@ final _firestore = FirebaseFirestore.instance;
 
 //añadir nuevo usuario a Firestore
 void addNewUser(UserModel user) {
+  var password;
+  if (user.password != '') {
+    password = cifrarPass(user.password!);
+  } else {
+    password = user.password;
+  }
   var id = user.id;
   var name = user.name;
   var email = user.email;
-  var password = cifrarPass(user.password!);
   var imgUrl = user.imgUrl;
   _firestore.collection("users").add({
     "id": '$id',
@@ -118,12 +123,14 @@ getUserByEmail(
       await collectionReference.where('email', isEqualTo: user.email).get();
 
   if (users.docs.isEmpty) {
+    print('estoy dentro');
     user.id = genId();
     user.password = '';
     user.media = true;
     addNewUser(user);
     saveUserSharedPrefs(user);
   } else {
+    print('estoy fuera');
     List<UserModel> list = [];
     for (var doc in users.docs) {
       UserModel user = new UserModel();
