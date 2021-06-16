@@ -11,5 +11,5 @@ Desarrollo de una aplicación android, a modo de foro y red social, para cualqui
 
 ## Autor ✒️
 
-* **Guillermo Arredondo Pérez** - [villanuevand](https://github.com/GuillermoArredondo)
+* **Guillermo Arredondo Pérez** - [Guillermo - GitHub](https://github.com/GuillermoArredondo)
 
